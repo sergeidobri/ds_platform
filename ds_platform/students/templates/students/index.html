@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+<p>Отображается главная страница</p>
+
+{% if user.is_authenticated %}
+<p>Вы авторизованы</p>
+{% endif %}
+
+{% endblock %}

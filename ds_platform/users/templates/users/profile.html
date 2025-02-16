@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+<h1>Мой профиль</h1>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <img src="{{ student.avatar.url }}" class="circle-image">
+    {{ form.as_p }}
+
+    <button type="submit">Изменить</button>
+</form>
+
+{% endblock %}

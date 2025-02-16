@@ -1,3 +1,64 @@
-h1 {
-    color: red;
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+.header {
+    background-color: rgb(41, 89, 151); 
+    color: white; 
+    display: flex; 
+    /* justify-content: space-between; */
+    align-items: center;
+    padding: 10px;
+}
+
+
+.navbar li a {
+    color: white; 
+    text-decoration: none;
+}
+
+.navbar li a:hover {
+    color: lightblue;
+}
+
+ul.navbar {
+    list-style: none;
+    margin: 0;
+    color: #ffffff;
+    font-size: 20px;
+    display: flex; 
+    width: 100%; /* Задаем ширину 100% */
+    justify-content: space-between; /* Размещаем элементы по концам */
+    align-items: center;
+    padding: 0; /* Убираем отступы */
+}
+
+ul.navbar li {
+    margin: 0 15px;
+    transition: color 0.3s;
+}
+
+ul.navbar li.last {
+    margin-left: auto; /* Это сработает для варианта flex */
+}
+
+ul.navbar li.last a {
+    margin: 0 5px 0 5px;
+}
+
+ul.navbar li.project-title {
+    color: white;
+    margin: 0 60px 0 0;
+}
+
+.main-content {
+    margin: 10px;
+}
+
+.circle-image {
+    height: 150px;
+}
+
+.homework_image {
+    width: 50%;
 }

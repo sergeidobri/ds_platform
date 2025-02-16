@@ -66,6 +66,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'students.context_processors.get_main_menu',
             ],
         },
     },
@@ -139,8 +140,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATIC_URL = "/static/"  # это путь к каталогу, в котором веб-сервер ищет файлы статики.
 STATIC_ROOT = BASE_DIR / "staticfiles"  # расположение коренной папки staticfiles.
+STATICFILES_DIRS = [
+    STATIC_ROOT / "images",
+]
 
 MEDIA_ROOT = STATIC_ROOT / "images"
 MEDIA_URL = "/staticfiles/images/"
 
 LOGOUT_REDIRECT_URL = "home"
+LOGIN_URL = "users:login"

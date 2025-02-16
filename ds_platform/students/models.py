@@ -21,7 +21,7 @@ class Student(models.Model):
         default=True, 
         verbose_name="активен"
     )
-    avatar = models.FileField(
+    avatar = models.ImageField(
         upload_to="students/avatars/", 
         verbose_name="аватар"
     )
@@ -71,11 +71,11 @@ class Student(models.Model):
 
 
 class Homework(models.Model):
-    lesson = models.ForeignKey(
-        "Lesson", 
-        on_delete=models.CASCADE,  # удаляем урок - дз удаляется тоже
-        verbose_name="id урока"
-    )
+    # lesson = models.ForeignKey(
+    #     "Lesson", 
+    #     on_delete=models.CASCADE,  # удаляем урок - дз удаляется тоже
+    #     verbose_name="id урока"
+    # )
     date_since = models.DateField(
         auto_now_add=True,  # только при создании
         verbose_name="дата задания дз"
@@ -86,6 +86,10 @@ class Homework(models.Model):
     is_done = models.BooleanField(
         default=False,
         verbose_name="флаг выполнения дз"
+    )
+    is_on_check = models.BooleanField(
+        default=False,
+        verbose_name="флаг проверки дз"
     )
 
 
@@ -106,6 +110,15 @@ class Homework_file(models.Model):
     path = models.FileField(
         upload_to="homeworks/tasks/%Y/%m/%d/",  # разобраться с уникальными именами.
         verbose_name="путь до файла"
+    )
+    is_second_part = models.BooleanField(
+        default=False,
+        verbose_name="задание второй части"
+    )
+    student_answer = models.CharField(
+        default="",
+        verbose_name="ответ студента",
+        max_length=255
     )
 
 
@@ -155,6 +168,11 @@ class Lesson(models.Model):
         verbose_name="дата проведения урока",
         null=True
     )
+    homework = models.OneToOneField(
+        "Homework",
+        on_delete=models.PROTECT,
+        verbose_name="id домашнего задания"
+    )
 
 
     def __str__(self):
@@ -180,6 +198,10 @@ class Subject(models.Model):
 
 
 class Answer_file(models.Model):
+    file_name = models.CharField(
+        max_length=100,
+        verbose_name="название файла",
+    )
     homework = models.ForeignKey(
         "Homework",
         on_delete=models.CASCADE,  # удаляю дз - удаляю и ответы на дз
@@ -188,6 +210,11 @@ class Answer_file(models.Model):
     path = models.FileField(
         upload_to="homeworks/answers/%Y/%m/%d/",
         verbose_name="путь до файла"
+    )
+    homework_file = models.ForeignKey(
+        "Homework_file",
+        on_delete=models.CASCADE,
+        verbose_name="id файла дз",
     )
 
 

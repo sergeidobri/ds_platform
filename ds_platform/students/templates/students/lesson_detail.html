@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+
+<h1>{{ lesson.subject.name }}. Урок на тему "{{ lesson.theme }}"</h1>
+
+<p>Дата проведения урока: {{ lesson.date|date:"d-m-Y" }}</p>
+
+<p>Ссылка на урок: <a href="{{ lesson.link }}" target="_blank"><span class="video-conf-link">{{ lesson.link }}</span></a></p>
+
+{% if not lesson.homework.is_on_check %}
+<p>К данному уроку доступно домашнее задание. Успейте сделать её до {{ lesson.homework.date_until|date:"d-m-Y" }} <a href="{% url 'lesson-homework' lesson.homework_id %}">Перейти</a></p>
+{% else %}
+    {% if lesson.homework.is_done %}
+        <p>Ваша домашняя работа была проверена. <a href="{% url 'lesson-homework' lesson.homework_id %}">Перейти</a></p></p>
+    {% else %}
+        <p>Ваша домашняя работа на проверке. <a href="{% url 'lesson-homework' lesson.homework_id %}">Перейти</a></p></p></p>
+    {% endif %}
+{% endif %}
+
+{% endblock %}

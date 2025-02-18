@@ -14,17 +14,36 @@
 <div class="header">
     <ul class="navbar">
         <li class="project-title">DS_platform</li>
+{% if user.is_authenticated %}
     {% for menu_item in mainmenu %}
-            <li><a href="{% url menu_item.url_name %}">{{ menu_item.title }}</a></li>
-            {% if not forloop.last %}
-                <li>|</li>
+            {% if menu_item.url_name == 'moder:student-list' %}
+                {% if user.is_staff %}
+                    <li><a href="{% url menu_item.url_name %}">{{ menu_item.title }}</a></li>
+                    {% if not forloop.last %}
+                        <li>|</li>
+                    {% endif %}
+                {% endif %}
+            {% else %}
+                {% if menu_item.url_name == 'lessons' %}
+                    {% if not user.is_staff %}
+                        <li><a href="{% url menu_item.url_name %}">{{ menu_item.title }}</a></li>
+                        {% if not forloop.last %}
+                            <li>|</li>
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    <li><a href="{% url menu_item.url_name %}">{{ menu_item.title }}</a></li>
+                    {% if not forloop.last %}
+                        <li>|</li>
+                    {% endif %}
+                {% endif %}
             {% endif %}
     {% endfor %}
-
+{% endif %}
     {% if not user.is_authenticated %}
         <li class="last"><a href="{% url 'users:login' %}">Войти</a></li>
     {% else %}
-        <li class="last"><a href="{% url 'users:profile' %}">{{ user.username }}</a> | <a href="{% url 'users:logout' %}">Выйти</a></li>
+        <li class="last">{% if not user.is_staff %}<a href="{% url 'users:profile' %}">{% endif %}{{ user.username }}{% if not user.is_staff %}</a>{% endif %} | <a href="{% url 'users:logout' %}">Выйти</a></li>
     {% endif %} 
 </div>
 

@@ -9,49 +9,70 @@
 <p>Вернуться обратно к уроку <a href="{% url 'lesson-detail' lesson.pk %}">"{{ lesson.theme }}"</a></p>
 
 {% if lesson.homework.is_on_check %}
-<p>
-    Вы ответили на домашнее задание. Ожидайте проверки
-</p>
-<form method="POST">
-    {% csrf_token %}
-    <input type="submit" name="remove" value="Убрать с проверки">
-</form>
+    <p>Вы ответили на домашнее задание. Ожидайте проверки</p>
 
+    <form method="POST">
+        {% csrf_token %}
+        <input type="submit" name="remove" value="Убрать с проверки">
+    </form>
+
+{% else %}
+    {% if lesson.homework.is_done %}<p>Ваша домашняя работа проверена</p>{% endif %}
+    {% if lesson.homework.comment %}<p>Комментарий преподавателя: "{{ lesson.homework.comment }}"</p>{% endif %}
 {% endif %}
+
 <form method="POST" enctype="multipart/form-data">
 
     {% csrf_token %}
     {% for homework_file in homework_files %}
+        <hr>
         <p>
             №{{ forloop.counter }}
             <img src="{{ homework_file.path.url }}" class="homework_image" alt="Ссылка на скачивание файла:">
             <a href="{{ homework_file.path.url }}" target="_blank">Скачать</a>
         </p>
         {% if not homework_file.homework.is_on_check %}
-            {% if not homework_file.is_second_part %}
-                <p>
-                    <input name="response_{{ homework_file.pk }}" type="text" value="{{ homework_file.student_answer }}">
-                </p>
-            {% else %}
-                <p>
-                    Загрузите ответ на задание одним файлом или несколькими:
-                </p>
-                <p>
-                    <input type="file" name="response_second_part_{{ homework_file.pk }}"> | <form method="POST" action="{% url 'lesson-homework' lesson.pk %}"><input type="submit" name="response_second_part_{{ homework_file.pk }}" value="Прикрепить этот файл"></a>
-                </p>
-                {% if student_answers %}
-                Вы прикрепили файл(-ы):
-                    {% for student_answer in student_answers %}
-                        {% if student_answer.homework_file_id == homework_file.pk %}
-                            <p>файл {{ student_answer.file_name }} <a href="{{ student_answer.path.url }}">Скачать</a> | <form method="POST" action="{% url 'lesson-homework' lesson.pk %}"><input type="submit" name="delete_answer_{{ student_answer.pk }}" value="Удалить"></a></p>
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
+            {% if not homework_file.homework.is_done %}
+                {% if not homework_file.is_second_part %}
                     <p>
-                        Пока вы не прикрепили файлы. Пожалуйста, постарайтесь решить задание и прикрепить к нему ответ.
+                        <input name="response_{{ homework_file.pk }}" type="text" value="{{ homework_file.student_answer }}">
                     </p>
+                {% else %}
+                    <p>Загрузите ответ на задание одним файлом или несколькими:</p>
+
+                    <p>
+                        <input type="file" name="response_second_part_{{ homework_file.pk }}"> | <form method="POST" action="{% url 'lesson-homework' lesson.pk %}"><input type="submit" name="response_second_part_{{ homework_file.pk }}" value="Прикрепить этот файл"></a>
+                    </p>
+                    {% if student_answers %}
+                    Вы прикрепили файл(-ы):
+                        {% for student_answer in student_answers %}
+                            {% if student_answer.homework_file_id == homework_file.pk %}
+                                <p>файл {{ student_answer.file_name }} <a href="{{ student_answer.path.url }}">Скачать</a> | <form method="POST" action="{% url 'lesson-homework' lesson.pk %}"><input type="submit" name="delete_answer_{{ student_answer.pk }}" value="Удалить"></a></p>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <p>Пока вы не прикрепили файлы. Пожалуйста, постарайтесь решить задание и прикрепить к нему ответ.</p>
+                    {% endif %}
                 {% endif %}
-            {% endif%}
+            {% else %}
+                {% if not homework_file.is_second_part %}
+                    <p>Ваш ответ: {{ homework_file.student_answer }}</p>         
+                {% else %}
+                    {% if student_answers %}
+                    Вы прикрепили файл(-ы):
+                        {% for student_answer in student_answers %}
+                            {% if student_answer.homework_file_id == homework_file.pk %}
+                                <p>файл {{ student_answer.file_name }} <a href="{{ student_answer.path.url }}">Скачать</a> | <form method="POST" action="{% url 'lesson-homework' lesson.pk %}"><input type="submit" name="delete_answer_{{ student_answer.pk }}" value="Удалить"></a></p>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <p>Пока вы не прикрепили файлы. Пожалуйста, постарайтесь решить задание и прикрепить к нему ответ.</p>
+                    {% endif %}
+                {% endif %}
+
+                <p>Комментарий преподавателя: {% if homework_file.teacher_comment %}"{{ homework_file.teacher_comment }}"{% else %}-{% endif %}</p>
+                <p>Балл: {{ homework_file.current_points }}/{{ homework_file.max_points }}</p>
+            {% endif %}
         {% else %}
             {% if not homework_file.is_second_part %}
                 <p>
@@ -77,7 +98,11 @@
     {% endfor %}
 
 {% if not lesson.homework.is_on_check %}
-    <button type="submit" name="put_on_check">Отправить на проверку</button>
+    {% if lesson.homework.is_done %}
+    {% else %}
+        <button type="submit">Применить</button>
+        <button type="submit" name="put_on_check">Отправить на проверку</button>
+    {% endif %}
 {% endif %}
 </form>
 {% endblock %}

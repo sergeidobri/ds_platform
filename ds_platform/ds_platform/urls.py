@@ -25,6 +25,7 @@ urlpatterns = [
     path('users/', include('users.urls', namespace='users')),
     path('', include('students.urls')),
     path('favicon.ico',RedirectView.as_view(url='staticfiles/images/favicon.ico')),
+    path('moderation/', include('moderators_part.urls', namespace='moder')),
 ]
 
 if settings.DEBUG:

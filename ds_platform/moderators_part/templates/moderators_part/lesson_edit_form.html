@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+
+<h1>Форма изменения урока</h1>
+
+<p><a href="{% url 'moder:lesson-detail' lesson.student.pk lesson.pk %}">Вернуться</a></p>
+
+<form method="POST">
+    {% csrf_token %}
+    
+    {{ form.as_p }}
+
+    <button type="submit">Изменить урок</button>
+</form>
+
+{% endblock %}

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'students.apps.StudentsConfig',
     'users.apps.UsersConfig',
+    'moderators_part.apps.ModeratorsPartConfig'
 ]
 
 MIDDLEWARE = [
@@ -140,9 +141,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATIC_URL = "/static/"  # это путь к каталогу, в котором веб-сервер ищет файлы статики.
 STATIC_ROOT = BASE_DIR / "staticfiles"  # расположение коренной папки staticfiles.
-STATICFILES_DIRS = [
-    STATIC_ROOT / "images",
-]
 
 MEDIA_ROOT = STATIC_ROOT / "images"
 MEDIA_URL = "/staticfiles/images/"

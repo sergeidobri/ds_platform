@@ -1,15 +1,12 @@
+import re
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, View
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models import Lesson, Homework_file, Homework, Answer_file
+from .models import Lesson, Homework_file, Homework, Answer_file, Subject, Student, Lesson_material
 
 # Create your views here.
 def show_home_page(request):
     return render(request, "students/index.html", context={"title": "Главная страница", "user": request.user})
-
-# def show_lessons_page(request):
-#     return render(request, "students/lessons.html", context={"title": "Уроки", "user": request.user})
-
 
 class LessonsListView(LoginRequiredMixin,
                       ListView):
@@ -23,8 +20,11 @@ class LessonsListView(LoginRequiredMixin,
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        lessons = self.get_queryset()
+        subjects = {lesson.subject_id for lesson in lessons}
         context["title"] = "Уроки"
         context["user"] = self.request.user
+        context["subjects"] = Subject.objects.filter(pk__in=subjects)
         return context
 
 
@@ -46,6 +46,8 @@ class LessonDetailView(LoginRequiredMixin,
         context = super().get_context_data(**kwargs)
         context["title"] = f"Урок \"{context.get('object', {"theme": ""}).theme}\""
         context["user"] = self.request.user
+        context["student"] = Student.objects.get(user=self.request.user)
+        context["lesson_materials"] = Lesson_material.objects.filter(lesson_id=self.kwargs['pk'])
         return context
 
 def show_about_page(request):
@@ -53,64 +55,59 @@ def show_about_page(request):
 
 
 class LessonHomeworkView(View):
-    def get(self, request, **kwargs):
-        template_name = "students/homework_for_lesson.html"
+    template_name = "students/homework_for_lesson.html"
 
+    def get(self, request, **kwargs):
         if not self.test_func():
             return self.handle_no_permission()
 
-        return render(request, template_name, self.get_context_data())
+        return render(request, self.template_name, self.get_context_data())
 
     def post(self, request, **kwargs):
-        homework_files = self.get_queryset()
         template_name = "students/homework_for_lesson.html"
-        homework_object = Homework.objects.get(lesson=Lesson.objects.get(pk=kwargs['pk']))
-        answers_objects = self.get_context_data()["student_answers"]
+        context = self.get_context_data()
 
-        to_remove = self.request.POST.get(f"remove")
-        if to_remove:
-            Homework.objects.\
-                filter(lesson=Lesson.objects.get(pk=kwargs['pk'])).\
-                update(is_on_check=False)
-            return render(request, template_name, self.get_context_data())
+        if not self.test_func():
+            return self.handle_no_permission()
         
-        for homework_file in homework_files:
-            student_response = self.request.POST.get(f"response_{homework_file.pk}")
+        for key, value in request.POST.items():
+            if context['lesson'].homework.is_done: break
+            if re.match(r'remove', key):
+                Homework.objects.filter(lesson=context['lesson']).update(is_on_check=False)
+            
+            if re.match(r'response_*[0-9]', key):
+                entry_pk = int(key.split('_')[-1])
+                Homework_file.objects.filter(pk=entry_pk).update(student_answer=value)
 
-            if student_response:
-                Homework_file.objects.filter(pk=homework_file.pk).update(student_answer=student_response)
-            else:
-                if not homework_object.is_on_check:
-                    answer_file = request.FILES.get(f'response_second_part_{homework_file.pk}')
-                    if answer_file:
-                        Answer_file.objects.create(
-                            homework=homework_object,
-                            path=answer_file,
-                            homework_file=homework_file,
-                            file_name=answer_file._name
-                        )
-
-        for answer in answers_objects:
-            delete_student_response = self.request.POST.get(f"delete_answer_{answer.pk}")       
-            if delete_student_response:
-                Answer_file.objects.filter(pk=answer.pk).delete() 
-
-        put_homework_on_check = self.request.POST.get("put_on_check")
-        if put_homework_on_check is not None:
-            Homework.objects.filter(lesson=Lesson.objects.get(pk=kwargs['pk'])).update(is_on_check=True)
+            if re.match(r'delete_answer_*', key):
+                entry_pk = int(key.split('_')[-1])
+                Answer_file.objects.filter(pk=entry_pk).delete()
+            
+            if re.match(r'put_on_check', key):
+                Homework.objects.filter(lesson=context['lesson']).update(is_on_check=True)
+            
+        
+        for key, value in request.FILES.items():
+            if context['lesson'].homework.is_done: break
+            if (not context['lesson'].homework.is_on_check) and re.match(r'response_second_part_*', key):
+                entry_pk = int(key.split('_')[-1])
+                Answer_file.objects.create(
+                    homework=context['lesson'].homework,
+                    path=value,
+                    homework_file=Homework_file.objects.get(pk=entry_pk),
+                    file_name=value._name
+                )
         
         return render(request, template_name, self.get_context_data())
-
-    def get_queryset(self):
-        return Homework_file.objects.filter(homework_id=self.kwargs['pk']).order_by("path")
 
     def get_context_data(self, **kwargs):
         context = {}
+        lesson = Lesson.objects.get(pk=self.kwargs['pk'])
         context["title"] = f"Домашнее задание"
         context["user"] = self.request.user
-        context["lesson"] = Lesson.objects.get(pk=self.kwargs['pk'])
-        context["homework_files"] = self.get_queryset()
-        context["student_answers"] = Answer_file.objects.filter(homework=context["lesson"].homework)
+        context["lesson"] = lesson
+        context["homework_files"] = Homework_file.objects.filter(homework=lesson.homework).order_by("path")
+        context["student_answers"] = Answer_file.objects.filter(homework=lesson.homework)
         return context
     
     def test_func(self):

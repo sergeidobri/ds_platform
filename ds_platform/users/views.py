@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-from .forms import StudentUserCreationForm, ProfileForm
+from .forms import StudentUserCreationForm, ProfileForm, CustomAuthenticationForm
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import logout
 from django.views.generic import UpdateView
 from django.contrib.auth import get_user_model
@@ -18,7 +17,7 @@ class RegisterUser(CreateView):
     extra_context = {"title": "Регистрация"}
 
 class LoginUser(LoginView):
-    form_class = AuthenticationForm
+    form_class = CustomAuthenticationForm
     template_name = "users/login.html"
     extra_context = {"title": "Авторизация"}
 

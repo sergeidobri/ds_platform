@@ -5,9 +5,16 @@
 {% block content %}
 
 <h1>Мои уроки:</h1>
-<ul>
-{% for lesson in lessons %}
-    <li><a href="{% url 'lesson-detail' lesson.pk %}">{{ lesson.date|date:"d-m-Y" }} |  {{ lesson.subject.name }} | {{ lesson.theme }}</a></li>
+
+{% for subject in subjects %}
+    <h2>{{ subject.name }}</h2>
+    <ul>
+    {% for lesson in lessons %}
+        {% if lesson.subject_id == subject.pk %}
+            <li><a href="{% url 'lesson-detail' lesson.pk %}">{{ lesson.date|date:"d-m-Y" }} | {{ lesson.theme }}</a></li>
+        {% endif %}
+    {% endfor %}
+    </ul>
 {% endfor %}
-</ul>
+
 {% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+
+<h1>Изменение урока "{{ lesson.theme }}", предмет: "{{ lesson.subject.name }}"</h1>
+
+<p><a href="{% url 'moder:student-detail' lesson.student.pk %}">Вернуться к урокам ученика</a></p>
+
+<p><a href="{% url 'moder:edit-lesson' lesson.student.pk lesson.pk %}">Изменить данные про урок</a></p>
+
+
+<form method="POST">
+    {% csrf_token %}
+{% if not lesson_materials %}
+    <p><a href="{% url 'moder:add-lesson_material' lesson.student.pk lesson.pk %}">Добавить файл конспекта</a></p>
+{% else %}
+    <p>Файлы конспекта:</p>
+    <ul>
+        {% for lesson_material in lesson_materials %}
+            <li>файл {{ lesson_material.file_name }}: <a href="{{ lesson_material.path.url }}">Скачать</a> | <input type="submit" name="delete_lesson_material_{{ lesson_material.pk }}" value="Удалить"></li>
+        {% endfor %}
+        <li><a href="{% url 'moder:add-lesson_material' lesson.student.pk lesson.pk %}">Добавить</a></li>
+    </ul>
+
+{% endif %}
+
+{% if not lesson.homework %}    
+    <p><a href="{% url 'moder:add-homework' lesson.student.pk lesson.pk %}">Добавить домашнюю работу</a></p>
+{% else %}
+    <p><a href="{% url 'moder:edit-homework' lesson.student.pk lesson.pk %}">Изменить данные про домашнее задание</a></p>
+
+    {% if lesson.homework.is_done %}
+        <p><a href="{% url 'moder:check-homework' lesson.student.pk lesson.pk %}">Проверить домашнее задание</a></p>
+    {% else %}
+        <p><a href="{% url 'moder:check-homework' lesson.student.pk lesson.pk %}">Отредактировать/проверить домашнее задание</a></p>
+    {% endif %}
+
+{% endif %}
+
+    <input type="submit" name="to_delete" value="Удалить урок">
+</form>
+
+<hr>
+
+
+
+{% endblock %}

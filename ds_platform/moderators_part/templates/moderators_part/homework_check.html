@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+
+<h2>Домашняя работа: </h2>
+
+<p><a href="{% url 'moder:lesson-detail' lesson.student.pk lesson.pk %}">Вернуться</a></p>
+
+<form method="POST" enctype="multipart/form-data" action="{% url 'moder:check-homework' lesson.student.pk lesson.pk %}">
+
+<input type="submit" name="to_delete" value="Удалить дз">
+
+{% if lesson.homework.is_on_check %}
+    <p>Ученик прислал дз на проверку</p>
+{% endif %}
+
+{% if lesson.homework.is_done %}
+    <p>
+        Домашняя работа выполнена / <input type="submit" name="redo" value="Отменить выполнение">
+    </p>
+    {% if lesson.homework.comment %}
+        <p>Ваш комментарий: "{{ lesson.homework.comment }}"</p>
+    {% endif %}
+{% endif %}
+
+    {% csrf_token %}
+    {% for homework_file in homework_files %}
+        <hr>
+        <p>
+            №{{ forloop.counter }}
+            <img src="{{ homework_file.path.url }}" class="homework_image" alt="Ссылка на скачивание файла:">
+            <a href="{{ homework_file.path.url }}" target="_blank">Скачать</a>{% if not lesson.homework.is_done %} | <input name="delete_hw_file_{{ homework_file.pk }}" type="submit" value="Удалить файл">{% endif %}
+        </p>
+            {% if not homework_file.is_second_part %}
+                 <p>Ответ ученика: {% if homework_file.student_answer %}{{ homework_file.student_answer }}{% else %}-{% endif %}</p>
+            {% else %}
+                {% if answer_files %}
+                    <p>Ученик прикрепил файлы:</p>
+                    {% for answer_file in answer_files %}
+                        {% if answer_file.homework_file_id == homework_file.pk %}
+                            <p>файл {{ answer_file.file_name }} <a href="{{ answer_file.path.url }}">Скачать</a>{% if not lesson.homework.is_done %} | <form method="POST" action="{% url 'lesson-homework' lesson.pk %}"><input type="submit" name="delete_answer_{{ answer_file.pk }}" value="Удалить">{% endif %}</p>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <p>Ученик не прикрепил ответ</p>
+                {% endif %}
+            {% endif%}
+        {% if not lesson.homework.is_done %}
+        <p>
+            {% if not homework_file.teacher_comment %}
+                Введите комментарий:
+            {% else %}
+                <p>Комментарий: "{{ homework_file.teacher_comment }}"</p>
+
+                Измените комментарий:
+            {% endif %}
+                <input name="comment_{{ homework_file.pk }}" type="text" value="{% if homework_file.teacher_comment %}{{ homework_file.teacher_comment }}{% else %}{% endif %}">
+        </p>
+        <p>
+                Оцените задание:
+                <input type="number" name="points_{{ homework_file.pk }}" value="{{ homework_file.current_points }}"> / {{ homework_file.max_points }}
+        </p>
+        {% else %}
+            <p>Комментарий: "{% if homework_file.teacher_comment %}{{ homework_file.teacher_comment }}{% else %}-{% endif %}"</p>
+            <p>Оценка: {{ homework_file.current_points }}/{{ homework_file.max_points }}</p>
+        {% endif %}
+    {% endfor %}
+<hr>
+    {% if not lesson.homework.is_done %}
+        <p><a href="{% url 'moder:add-homework_file' lesson.student.pk lesson.pk %}"><input type="button" value="Добавить файл дз"></a></p>
+        
+        <p>Введите комментарий к домашней работе:
+        <input type="text" name="general_comment" value="{% if lesson.homework.comment %}{{ lesson.homework.comment }}{% else %}{% endif %}"></p>
+
+        {% if lesson.homework.is_on_check %}
+        <p>
+            <input type="submit" name="assert" value="Одобрить выполнение">
+            /
+            <input type="submit" name="redo" value="Отправить на доработку">
+        </p>
+        {% endif %}
+
+        <button type="submit">Применить</button> 
+    {% endif %}
+</form>
+
+{% endblock %}

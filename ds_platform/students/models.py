@@ -14,7 +14,7 @@ class Student(models.Model):
         max_length=50, 
         verbose_name="фамилия ученика"
     )
-    school_class = models.IntegerField(  # разобраться с выборами позже
+    school_class = models.IntegerField(
         verbose_name="класс"
     )
     is_active = models.BooleanField(
@@ -23,35 +23,31 @@ class Student(models.Model):
     )
     avatar = models.ImageField(
         upload_to="students/avatars/", 
-        verbose_name="аватар"
+        verbose_name="аватар",
+        default="students/avatars/average_user.png",
     )
     whatsapp_link = models.CharField(
         max_length=100,
-        unique=True,
         verbose_name="ссылка на whatsapp",
         blank=True
     )
     telegram_link = models.CharField(
         max_length=100,
-        unique=True,
         verbose_name="ссылка на телеграм",
         blank=True
     )
     vk_link = models.CharField(
         max_length=100,
-        unique=True,
         verbose_name="ссылка на вк",
         blank=True
     )
     phone_number = models.CharField(
         max_length=16,
-        unique=True,
         verbose_name="номер телефона",
         blank=True
     )
     email = models.CharField(
         max_length=50,
-        unique=True,
         verbose_name="электронная почта",
         blank=True
     )
@@ -59,6 +55,11 @@ class Student(models.Model):
         get_user_model(),
         on_delete=models.CASCADE,  # удаляю студента - удаляю привязанного пользователя
         verbose_name="пользователь студента"
+    )
+    lesson_link = models.CharField(
+        max_length=255,
+        verbose_name="ссылка на конференцию",
+        null=True
     )
 
 
@@ -71,11 +72,6 @@ class Student(models.Model):
 
 
 class Homework(models.Model):
-    # lesson = models.ForeignKey(
-    #     "Lesson", 
-    #     on_delete=models.CASCADE,  # удаляем урок - дз удаляется тоже
-    #     verbose_name="id урока"
-    # )
     date_since = models.DateField(
         auto_now_add=True,  # только при создании
         verbose_name="дата задания дз"
@@ -91,10 +87,15 @@ class Homework(models.Model):
         default=False,
         verbose_name="флаг проверки дз"
     )
+    comment = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name="генеральный комментарий на дз"
+    )
 
 
     def __str__(self):
-        return f"Домашнее задание от {self.date_since}"
+        return f"Домашнее задание №{self.pk} от {self.date_since}"
 
     class Meta:
         verbose_name = "Домашнее задание"
@@ -108,7 +109,7 @@ class Homework_file(models.Model):
         verbose_name="id домашнего задания"
     )
     path = models.FileField(
-        upload_to="homeworks/tasks/%Y/%m/%d/",  # разобраться с уникальными именами.
+        upload_to="homeworks/tasks/%Y/%m/%d/",
         verbose_name="путь до файла"
     )
     is_second_part = models.BooleanField(
@@ -118,9 +119,28 @@ class Homework_file(models.Model):
     student_answer = models.CharField(
         default="",
         verbose_name="ответ студента",
-        max_length=255
+        max_length=255,
+        blank=True
+    )
+    teacher_comment = models.TextField(
+        null=True,
+        verbose_name="комментарий преподавателя",
+        blank=True
+    )
+    max_points = models.IntegerField(
+        default=1,
+        verbose_name="максимальное количество баллов"
+    )
+    current_points = models.IntegerField(
+        null=True,
+        blank=True,
+        verbose_name="текущее количество баллов"
     )
 
+    def __str__(self):
+        def get_path_name(path):
+            return path.split('/')[-1]
+        return f"{self.pk}: {get_path_name(str(self.path))}, дз №{self.homework.pk}"
 
     class Meta:
         verbose_name = "Файл домашнего задания"
@@ -128,10 +148,14 @@ class Homework_file(models.Model):
     
 
 class Lesson_material(models.Model):
+    file_name = models.CharField(
+        max_length=100,
+        verbose_name="название файла",
+    )
     lesson = models.ForeignKey(
         "Lesson",
         on_delete=models.CASCADE,  # удаляем урок - удаляем и материалы
-        verbose_name="id урока"
+        verbose_name="id урока",
     )   
     path = models.FileField(
         upload_to="materials/%Y/%m/%d/",
@@ -154,24 +178,25 @@ class Lesson(models.Model):
         on_delete=models.PROTECT,  # не логично удалять предмет. С ними взаимодействия не будет. Предохранимся от случайной ошибки
         verbose_name="id предмета"
     )
-    link = models.CharField(
-        max_length=100,
-        verbose_name="ссылка на урок (конфренция)"
-    )
+    # link = models.CharField(
+    #     max_length=100,
+    #     verbose_name="ссылка на урок (конфренция)"
+    # )
     student = models.ForeignKey(
         "Student",
         on_delete=models.CASCADE,  # удаляем ученика - удаляем уроки к нему - удаляем файлы к урокам и домашние задания
         verbose_name="id ученика"
     )
     date = models.DateField(
-        auto_now_add=True,  # по умолчанию дата проведения урока = дата создания урока
         verbose_name="дата проведения урока",
         null=True
     )
     homework = models.OneToOneField(
         "Homework",
-        on_delete=models.PROTECT,
-        verbose_name="id домашнего задания"
+        on_delete=models.SET_NULL,  # удаляется дз - устанавливается нулл
+        null=True,
+        verbose_name="id домашнего задания",
+        blank=True
     )
 
 

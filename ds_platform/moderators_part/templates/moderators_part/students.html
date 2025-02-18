@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+
+<h1>Ученики</h1>
+
+{% for student in students %}
+    <p><a href="{% url 'moder:student-detail' student.pk %}">{{ student.surname }} {{ student.name }}, {{ student.school_class }} кл.</a></p>
+{% endfor %}
+
+{% endblock %}

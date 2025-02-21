@@ -50,9 +50,6 @@ class LessonDetailView(LoginRequiredMixin,
         context["lesson_materials"] = Lesson_material.objects.filter(lesson_id=self.kwargs['pk'])
         return context
 
-def show_about_page(request):
-    return render(request, 'students/about.html', {"title": "О платформе"})
-
 
 class LessonHomeworkView(View):
     template_name = "students/homework_for_lesson.html"

@@ -13,7 +13,8 @@
 
 <div class="header">
     <ul class="navbar">
-        <li class="project-title">DS_platform</li>
+        <!-- <li class="project-title">DS_platform</li> -->
+        <li class="project-logo"><a href="{% url 'home' %}"><img src="/staticfiles/images/project/logo.png" alt="Logo"></a></li>
 {% if user.is_authenticated %}
     {% for menu_item in mainmenu %}
             {% if menu_item.url_name == 'moder:student-list' %}

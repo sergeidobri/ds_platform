@@ -1,14 +1,21 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
+    line-height: 1.6;
 }
+
+html {
+    font-size: 15px;
+}
+
+
 .header {
     background-color: rgb(41, 89, 151); 
     color: white; 
     display: flex; 
-    /* justify-content: space-between; */
     align-items: center;
     padding: 10px;
+    height: 40px;
 }
 
 
@@ -31,11 +38,19 @@ ul.navbar {
     justify-content: space-between; /* Размещаем элементы по концам */
     align-items: center;
     padding: 0; /* Убираем отступы */
+    
 }
 
 ul.navbar li {
-    margin: 0 15px;
+    margin: 0 15px 0 0;
     transition: color 0.3s;
+}
+
+.project-logo img {
+    /* max-width: 100%; */
+    min-height: 10px;
+    height: auto;
+    max-height: 30px;
 }
 
 ul.navbar li.last {
@@ -51,6 +66,7 @@ ul.navbar li.project-title {
     margin: 0 60px 0 0;
 }
 
+
 .main-content {
     margin: 10px;
 }
@@ -61,4 +77,34 @@ ul.navbar li.project-title {
 
 .homework_image {
     width: 50%;
+}
+
+@media (max-width: 600px) {
+    .project-logo img {
+        display: none;
+    }
+
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+}
+
+@media (max-width: 1200px) {
+    body {
+        font-size: 14px; /* Уменьшение размера шрифта для экранов меньше 1200px */
+    }
+}
+
+@media (max-width: 800px) {
+    body {
+        font-size: 12px; /* Уменьшение размера шрифта для экранов меньше 800px */
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 10px; /* Уменьшение размера шрифта для экранов меньше 480px */
+    }
 }

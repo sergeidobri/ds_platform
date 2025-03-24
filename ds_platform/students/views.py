@@ -1,30 +1,34 @@
 import re
 from django.shortcuts import render, redirect
+from django.contrib.auth import get_user_model
 from django.views.generic import ListView, DetailView, View
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models import Lesson, Homework_file, Homework, Answer_file, Subject, Student, Lesson_material
+from .models import Lesson, Homework_file, Homework, Answer_file, Subject, Lesson_material
 
 # Create your views here.
 def show_home_page(request):
+    if not request.user.is_authenticated:
+        return redirect("users:login")
     return render(request, "students/index.html", context={"title": "Главная страница", "user": request.user})
 
 class LessonsListView(LoginRequiredMixin,
-                      ListView):
+                      View):
     template_name = 'students/lessons.html'
-    context_object_name = "lessons"
-
-    def get_queryset(self):
-        current_user_id = self.request.user.pk
-        queryset = Lesson.objects.filter(student__user_id=current_user_id).order_by("date")
-        return queryset
     
+    def get(self, request):
+        return render(request, self.template_name, self.get_context_data())
+
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        lessons = self.get_queryset()
+        context = {}
+        current_user_id = self.request.user.pk
+        lessons = Lesson.objects.filter(student_id=current_user_id).order_by("-date")
         subjects = {lesson.subject_id for lesson in lessons}
+
+        context['lessons'] = lessons
         context["title"] = "Уроки"
         context["user"] = self.request.user
         context["subjects"] = Subject.objects.filter(pk__in=subjects)
+        context["student"] = self.request.user
         return context
 
 
@@ -36,17 +40,15 @@ class LessonDetailView(LoginRequiredMixin,
     context_object_name = "lesson"
     
     def test_func(self):
-        lesson = self.get_object()
-        return lesson.student.user == self.request.user or self.request.user.is_staff
+        lesson = self.get_object()  # причина дублированного запроса к Lesson
+        user = self.request.user  # причина дублированного запроса к User
+        return lesson.student == user or user.is_staff
 
     def handle_no_permission(self):
         return redirect("home")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = f"Урок \"{context.get('object', {"theme": ""}).theme}\""
-        context["user"] = self.request.user
-        context["student"] = Student.objects.get(user=self.request.user)
         context["lesson_materials"] = Lesson_material.objects.filter(lesson_id=self.kwargs['pk'])
         return context
 
@@ -103,13 +105,14 @@ class LessonHomeworkView(View):
         context["title"] = f"Домашнее задание"
         context["user"] = self.request.user
         context["lesson"] = lesson
-        context["homework_files"] = Homework_file.objects.filter(homework=lesson.homework).order_by("path")
-        context["student_answers"] = Answer_file.objects.filter(homework=lesson.homework)
+        context["homework_files"] = Homework_file.objects.filter(homework=lesson.homework).order_by("path").select_related()
+        context["student_answers"] = Answer_file.objects.filter(homework=lesson.homework).select_related()
+        context["student"] = self.request.user
         return context
     
     def test_func(self):
         lesson = self.get_context_data()['lesson']
-        return lesson.student.user == self.request.user or self.request.user.is_staff
+        return lesson.student == self.request.user or self.request.user.is_staff
 
     def handle_no_permission(self):
         return redirect("home")

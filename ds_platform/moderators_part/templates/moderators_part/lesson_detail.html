@@ -4,9 +4,11 @@
 
 {% block content %}
 
-<h1>Изменение урока "{{ lesson.theme }}", предмет: "{{ lesson.subject.name }}"</h1>
+<a href="{% url 'moder:student-detail' lesson.student.pk %}"><img src="/staticfiles/images/project/back_arrow.png" alt="Вернуться к урокам ученика"></a>
 
-<p><a href="{% url 'moder:student-detail' lesson.student.pk %}">Вернуться к урокам ученика</a></p>
+<h3 class="center-header-grey">-{{ lesson.subject.name }}-</h3>
+
+<h1 class="center-header">Изменение урока "{{ lesson.theme }}"</h1>
 
 <p><a href="{% url 'moder:edit-lesson' lesson.student.pk lesson.pk %}">Изменить данные про урок</a></p>
 
@@ -16,7 +18,6 @@
 {% if not lesson_materials %}
     <p><a href="{% url 'moder:add-lesson_material' lesson.student.pk lesson.pk %}">Добавить файл конспекта</a></p>
 {% else %}
-    <p>Файлы конспекта:</p>
     <ul>
         {% for lesson_material in lesson_materials %}
             <li>файл {{ lesson_material.file_name }}: <a href="{{ lesson_material.path.url }}">Скачать</a> | <input type="submit" name="delete_lesson_material_{{ lesson_material.pk }}" value="Удалить"></li>
@@ -39,10 +40,8 @@
 
 {% endif %}
 
-    <input type="submit" name="to_delete" value="Удалить урок">
+    <p class="center-header"><input class="custom-button" type="submit" name="to_delete" value="Удалить"></p>
 </form>
-
-<hr>
 
 
 

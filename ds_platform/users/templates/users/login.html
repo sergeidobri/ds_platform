@@ -4,11 +4,21 @@
 
 {% block content %}
 
-<form method="POST">
+<!-- <form method="POST">
     {% csrf_token %}
     <input type="hidden" name="next" value="{{ next }}">
     {{ form.as_p }}
     <p><button type="submit">Войти</p>
-</form>
+</form> -->
+
+<div class="custom-form-container">
+    <h2>Авторизация</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
+        {{ form.as_p }}
+        <button type="submit">Войти</button>
+    </form>
+</div>
 
 {% endblock %}

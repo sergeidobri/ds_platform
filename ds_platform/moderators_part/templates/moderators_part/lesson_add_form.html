@@ -4,16 +4,18 @@
 
 {% block content %}
 
-<h1>Форма добавления нового урока</h1>
+<a href="{% url 'moder:student-detail' student.pk %}"><img src="/staticfiles/images/project/back_arrow.png" alt="Вернуться к урокам ученика"></a>
 
-<p><a href="{% url 'moder:student-detail' student.pk %}">Вернуться к урокам ученика</a></p>
+<div class="custom-form-container">
+    <h2>Добавление урока</h2>
+    <form method="POST">
+        {% csrf_token %}
+        
+        {{ form.as_p }}
 
-<form method="POST">
-    {% csrf_token %}
-    
-    {{ form.as_p }}
+        <button type="submit">Создать урок</button>
+    </form>
+</div> 
 
-    <button type="submit">Создать урок</button>
-</form>
 
 {% endblock %}

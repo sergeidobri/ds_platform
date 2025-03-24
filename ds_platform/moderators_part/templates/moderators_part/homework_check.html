@@ -4,32 +4,34 @@
 
 {% block content %}
 
-<h2>Домашняя работа: </h2>
+<a href="{% url 'moder:lesson-detail' lesson.student.pk lesson.pk %}"><img src="/staticfiles/images/project/back_arrow.png" alt="Вернуться"></a>
 
-<p><a href="{% url 'moder:lesson-detail' lesson.student.pk lesson.pk %}">Вернуться</a></p>
+<h1 class="center-header">Домашняя работа</h1>
 
 <form method="POST" enctype="multipart/form-data" action="{% url 'moder:check-homework' lesson.student.pk lesson.pk %}">
 
-<input type="submit" name="to_delete" value="Удалить дз">
+
 
 {% if lesson.homework.is_on_check %}
-    <p>Ученик прислал дз на проверку</p>
+    <p class="center-header">Ученик прислал дз на проверку</p>
 {% endif %}
 
 {% if lesson.homework.is_done %}
-    <p>
-        Домашняя работа выполнена / <input type="submit" name="redo" value="Отменить выполнение">
-    </p>
+    <p class="center-header">Домашняя работа выполнена</p>
+
     {% if lesson.homework.comment %}
-        <p>Ваш комментарий: "{{ lesson.homework.comment }}"</p>
+        <p class="center-header">"{{ lesson.homework.comment }}"</p>
     {% endif %}
+
+    <p class="center-header"><input class="custom-button" type="submit" name="redo" value="Отменить"></p>
+
+
 {% endif %}
 
     {% csrf_token %}
     {% for homework_file in homework_files %}
-        <hr>
-        <p>
-            №{{ forloop.counter }}
+        <p class="center-header">№{{ forloop.counter }}</p>
+        <p class="center-header">
             <img src="{{ homework_file.path.url }}" class="homework_image" alt="Ссылка на скачивание файла:">
             <a href="{{ homework_file.path.url }}" target="_blank">Скачать</a>{% if not lesson.homework.is_done %} | <input name="delete_hw_file_{{ homework_file.pk }}" type="submit" value="Удалить файл">{% endif %}
         </p>
@@ -56,7 +58,7 @@
 
                 Измените комментарий:
             {% endif %}
-                <input name="comment_{{ homework_file.pk }}" type="text" value="{% if homework_file.teacher_comment %}{{ homework_file.teacher_comment }}{% else %}{% endif %}">
+                <textarea name="comment_{{ homework_file.pk }}">{% if homework_file.teacher_comment %}{{ homework_file.teacher_comment }}{% endif %}</textarea>
         </p>
         <p>
                 Оцените задание:
@@ -67,22 +69,24 @@
             <p>Оценка: {{ homework_file.current_points }}/{{ homework_file.max_points }}</p>
         {% endif %}
     {% endfor %}
-<hr>
+
     {% if not lesson.homework.is_done %}
-        <p><a href="{% url 'moder:add-homework_file' lesson.student.pk lesson.pk %}"><input type="button" value="Добавить файл дз"></a></p>
+    <hr>
+        <p><a href="{% url 'moder:add-homework_file' lesson.student.pk lesson.pk %}"><input class="custom-button" type="button" value="Добавить"></a></p>
         
-        <p>Введите комментарий к домашней работе:
-        <input type="text" name="general_comment" value="{% if lesson.homework.comment %}{{ lesson.homework.comment }}{% else %}{% endif %}"></p>
+        <p class="center-header">Комментарий к дз:</p>
+
+        <p class="center-header"><textarea class="general-comment" name="general_comment">{% if lesson.homework.comment %}{{ lesson.homework.comment }}{% endif %}</textarea></p>
 
         {% if lesson.homework.is_on_check %}
-        <p>
-            <input type="submit" name="assert" value="Одобрить выполнение">
+        <p class="center-header">
+            <input class="custom-button" type="submit" name="assert" value="Одобрить">
             /
-            <input type="submit" name="redo" value="Отправить на доработку">
+            <input class="custom-button" type="submit" name="redo" value="Доработка">
         </p>
         {% endif %}
 
-        <button type="submit">Применить</button> 
+        <p class="center-header"><button class="custom-button" type="submit">Применить</button></p> 
     {% endif %}
 </form>
 

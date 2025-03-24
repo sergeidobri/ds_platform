@@ -1,14 +1,13 @@
 {% extends 'base.html' %}
 
-{% block title %}Ученик {{ student.surname }} {{ student.name }}, {{ student.school_class }} кл.{% endblock %}
+{% block title %}Ученик {{ student.last_name }} {{ student.first_name }}, {{ student.school_class }} кл.{% endblock %}
 
 {% block content %}
 
-<h1>Ученик {{ student.surname }} {{ student.name }}, {{ student.school_class }} кл.</h1>
+<a href="{% url 'moder:student-list' %}"><img src="/staticfiles/images/project/back_arrow.png" alt="Вернуться к ученикам"></a>
 
-<!-- {% for lesson in lessons %}
-    <p><a href="{% url 'moder:lesson-detail' student.pk lesson.pk %}">{{ student.surname }} {{ student.name }}, {{ student.school_class }} кл.</a></p>
-{% endfor %} -->
+<h1 class="center-header">Ученик {{ student.last_name }} {{ student.first_name }}, {{ student.school_class }} кл.</h1>
+
 <ul>
 {% for subject in subjects %}
     <h2>{{ subject.name }}</h2>
@@ -17,7 +16,7 @@
             <li><a href="{% url 'moder:lesson-detail' student.pk lesson.pk %}">{{ lesson.date|date:"d-m-Y" }} | {{ lesson.theme }}</a></li>
         {% endif %}
     {% endfor %}
-    <p><a href="{% url 'moder:add-lesson' student.pk %}"><input type="button" value="Добавить новый урок"></a></p>
+    <p><a href="{% url 'moder:add-lesson' student.pk %}"><input class="custom-button" type="button" value="Добавить"></a></p>
 
 {% endfor %}
 </ul>

@@ -1,7 +1,7 @@
 from django import forms
 from students.models import Lesson, Homework, Homework_file, Lesson_material
 
-YEARS = [i for i in range(2020, 2040)]
+YEARS = [i for i in range(2023, 2026)]
 MONTHS = {
     "1": "Январь",
     "2": "Февраль",
@@ -19,7 +19,7 @@ MONTHS = {
 
 class LessonAddForm(forms.ModelForm):
     date = forms.DateField(widget=forms.SelectDateWidget(years=YEARS, months=MONTHS), label="Дата проведения урока")
-    homework = forms.ModelChoiceField(queryset=Homework.objects.all(),required=False, label="Домашнее задание (можно оставить пустым, если дз пока нет)")
+    # homework = forms.ModelChoiceField(queryset=Homework.objects.all(),required=False, label="Домашнее задание (можно оставить пустым, если дз пока нет)")
 
     class Meta:
         model = Lesson

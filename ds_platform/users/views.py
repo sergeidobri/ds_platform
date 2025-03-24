@@ -7,7 +7,7 @@ from django.contrib.auth import logout
 from django.views.generic import UpdateView
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from students.models import Student
+# from students.models import Student
 
 # Create your views here.
 class RegisterUser(CreateView):
@@ -31,14 +31,13 @@ def logout_user(request):
 
 class ProfileUser(LoginRequiredMixin,
                   UpdateView):
-    model = get_user_model()
     template_name = "users/profile.html"
     form_class = ProfileForm
     context_object_name = "student"
-
-    def get_object(self, queryset = ...):
-        return Student.objects.get(user_id=self.request.user.pk)
     
+    def get_object(self, queryset = ...):
+        return self.request.user
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = "Профиль"

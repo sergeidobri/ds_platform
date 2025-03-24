@@ -4,72 +4,6 @@ from django.contrib.auth import get_user_model
 def get_school_classes():
     return {i for i in range(1, 11+1)}
 
-# Create your models here.
-class Student(models.Model):
-    name = models.CharField(
-        max_length=30, 
-        verbose_name="имя ученика"
-    )
-    surname = models.CharField(
-        max_length=50, 
-        verbose_name="фамилия ученика"
-    )
-    school_class = models.IntegerField(
-        verbose_name="класс"
-    )
-    is_active = models.BooleanField(
-        default=True, 
-        verbose_name="активен"
-    )
-    avatar = models.ImageField(
-        upload_to="students/avatars/", 
-        verbose_name="аватар",
-        default="students/avatars/average_user.png",
-    )
-    whatsapp_link = models.CharField(
-        max_length=100,
-        verbose_name="ссылка на whatsapp",
-        blank=True
-    )
-    telegram_link = models.CharField(
-        max_length=100,
-        verbose_name="ссылка на телеграм",
-        blank=True
-    )
-    vk_link = models.CharField(
-        max_length=100,
-        verbose_name="ссылка на вк",
-        blank=True
-    )
-    phone_number = models.CharField(
-        max_length=16,
-        verbose_name="номер телефона",
-        blank=True
-    )
-    email = models.CharField(
-        max_length=50,
-        verbose_name="электронная почта",
-        blank=True
-    )
-    user = models.ForeignKey(
-        get_user_model(),
-        on_delete=models.CASCADE,  # удаляю студента - удаляю привязанного пользователя
-        verbose_name="пользователь студента"
-    )
-    lesson_link = models.CharField(
-        max_length=255,
-        verbose_name="ссылка на конференцию",
-        null=True
-    )
-
-
-    def __str__(self):
-        return f"{self.name} {self.surname}, {self.school_class} кл."
-
-    class Meta:
-        verbose_name = "Ученик"
-        verbose_name_plural = "Ученики"
-
 
 class Homework(models.Model):
     date_since = models.DateField(
@@ -91,6 +25,10 @@ class Homework(models.Model):
         null=True,
         blank=True,
         verbose_name="генеральный комментарий на дз"
+    )
+    is_returned = models.BooleanField(
+        default=False,
+        verbose_name="отправлено на доработку"
     )
 
 
@@ -178,12 +116,8 @@ class Lesson(models.Model):
         on_delete=models.PROTECT,  # не логично удалять предмет. С ними взаимодействия не будет. Предохранимся от случайной ошибки
         verbose_name="id предмета"
     )
-    # link = models.CharField(
-    #     max_length=100,
-    #     verbose_name="ссылка на урок (конфренция)"
-    # )
     student = models.ForeignKey(
-        "Student",
+        get_user_model(),
         on_delete=models.CASCADE,  # удаляем ученика - удаляем уроки к нему - удаляем файлы к урокам и домашние задания
         verbose_name="id ученика"
     )

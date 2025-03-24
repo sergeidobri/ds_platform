@@ -1,64 +1,297 @@
+/* general */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Golos Text", serif;
+    -webkit-font-smoothing: antialiased;   
+}
+
+h1, h2, h3 {
+    font-weight: 100;
+}
+
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    
 }
-.header {
-    background-color: rgb(41, 89, 151); 
-    color: white; 
-    display: flex; 
-    /* justify-content: space-between; */
+
+/* navbar */
+
+header {
+    background-color: rgb(29, 43, 88);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    padding: 0 20px 0 0;
 }
 
-
-.navbar li a {
-    color: white; 
-    text-decoration: none;
-}
-
-.navbar li a:hover {
-    color: lightblue;
-}
-
-ul.navbar {
-    list-style: none;
-    margin: 0;
-    color: #ffffff;
-    font-size: 20px;
-    display: flex; 
-    width: 100%; /* Задаем ширину 100% */
-    justify-content: space-between; /* Размещаем элементы по концам */
+.logo {
+    display: flex;
+    justify-content: center;
     align-items: center;
-    padding: 0; /* Убираем отступы */
-}
-
-ul.navbar li {
-    margin: 0 15px;
-    transition: color 0.3s;
-}
-
-ul.navbar li.last {
-    margin-left: auto; /* Это сработает для варианта flex */
-}
-
-ul.navbar li.last a {
-    margin: 0 5px 0 5px;
-}
-
-ul.navbar li.project-title {
     color: white;
-    margin: 0 60px 0 0;
+    font-weight: bold;
+    height: auto;
+    font-size: 1.5rem;
+    padding: 10px 0;
+    width: 5%;
+    margin: 0 20px 0 0;
+    background-color: rgb(21, 32, 66);
+}
+.logo img {
+    max-height: 40px;
 }
 
-.main-content {
-    margin: 10px;
+.panel {
+    display: flex;
+    justify-content: flex-start; /* начинаем с самого левого края */
+    align-items: center;
+    flex: 1;
+    align-self: stretch;
 }
 
-.circle-image {
-    height: 150px;
+.panel .element_panel {
+    display: flex;
+    padding: 0 7px;
+    align-self: stretch;
+    justify-content: center;
+    align-items: center;
+}
+
+.panel .element_panel a {
+    text-decoration: none;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.username {
+    color: white;
+    margin-right: 15px;
+    line-height: 1.5; 
+    text-decoration: none;
+    font-size: 1.5rem;
+}
+
+.user-photo {
+    width: 40px; 
+    height: 40px;
+    border-radius: 50%; 
+    margin-right: 10px;
+}
+
+.logout-icon {
+    width: 20px; 
+    height: 20px;
+}
+
+/* content styles */
+
+.center-header-grey {
+    text-align: center;
+    color: rgb(80, 80, 80)
+}
+
+.center-header {
+    text-align: center;
+}
+
+.center-container {
+    display: flex;
+    height: 30px;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 10px;
+}
+
+.center-text-element {
+    display: flex;
+    align-items: center;
+}
+
+.center-image-element {
+    display: flex;
+    align-items: center;
+    height: 32px;
+}
+
+/* button start */
+
+.custom-button {
+    background-color: #fff;
+    border: 1px solid rgb(29, 43, 88);
+    padding: 5px;
+    margin: 20px 0 20px 0;
+    width: 7.2em;
+    height: 2em;
+    font-size: 17px;
+    border-radius: 0.4em;
+  }
+  
+.custom-button p {
+    position: absolute;
+    top: 0.4em;
+    left: 1.2em;
+    margin: 0;
+    padding: 0;
+    transition: .5s;
+    color: rgb(29, 43, 88);
+  }
+  
+.custom-button svg {
+    position: absolute;
+    top: 0.45em;
+    right: 0.5em;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+    transition: 0.5s;
+    height: 1em;
+    fill: #fff
+  }
+  
+.custom-button:hover p {
+    left: 0.6em;
+    color: #fff
+  }
+  
+.custom-button:hover svg {
+    opacity: 1;
+  }
+  
+.custom-button:hover {
+    background-color: rgb(29, 43, 88);
+    color: white;
+  }
+
+/* button end */
+
+.general-comment {
+    width: 75%;
+    min-height: 100px; 
+}
+
+.center-image-element img {
+    height: 100%;
+    width: auto;
+}
+
+.container {
+    display: flex; 
+    flex-grow: 1;
+    min-height: calc(100vh - 50px);
+}
+
+.content {
+    flex-grow: 1; 
+    padding: 20px;
+    line-height: 2;
+    margin: 10px 10px 10px 10px;
+}
+
+.content a {
+    text-decoration: none; 
+    color: rgb(24, 53, 148); 
+}
+
+.content a:hover {
+    text-decoration: underline; 
+    color: rgb(0, 0, 255); 
+}
+
+.content ul {
+    list-style-type: none;
 }
 
 .homework_image {
     width: 50%;
+}
+
+/* footer */
+
+footer {
+    background-color: rgb(29, 43, 88);
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: auto; 
+}
+
+/* app users */
+
+.profile-photo {
+    max-width: 25%;
+}
+
+/* login form */
+
+.custom-form-container {
+    width: 400px;
+    margin: 100px auto;
+    padding: 30px;
+    background-color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.custom-form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.custom-form-container select,
+.custom-form-container input[type="date"],
+.custom-form-container input[type="text"],
+.custom-form-container input[type="password"],
+.custom-form-container input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.custom-form-container textarea {
+    width: 100%;
+}
+
+.custom-form-container button {
+    display: block;
+    width: 150px;
+    padding: 10px;
+    margin: 20px auto 0;
+    background-color: rgb(29, 43, 88);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.custom-form-container button:hover {
+    background-color: rgb(17, 28, 63);
+}
+
+/* adaptive */
+
+@media (max-width: 1500px) {
+    .logo {
+        width: 75px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .homework_image {
+        width: 90%;
+    }
 }

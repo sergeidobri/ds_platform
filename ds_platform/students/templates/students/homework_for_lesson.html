@@ -4,30 +4,55 @@
 
 {% block content %}
 
-<h1>Домашнее задание урока на тему "{{ lesson.theme }}"</h1>
+<a href="{% url 'lesson-detail' lesson.pk %}"><img src="/staticfiles/images/project/back_arrow.png" alt="Вернуться обратно к уроку '{{ lesson.theme }}'"></a>
 
-<p>Вернуться обратно к уроку <a href="{% url 'lesson-detail' lesson.pk %}">"{{ lesson.theme }}"</a></p>
+<h3 class="center-header-grey">-{{ lesson.subject.name }}-</h3>
+
+<h1 class="center-header">Домашнее задание урока на тему "{{ lesson.theme }}"</h1>
 
 {% if lesson.homework.is_on_check %}
-    <p>Вы ответили на домашнее задание. Ожидайте проверки</p>
+
+    <div class="center-container">
+        <div class="center-text-element">Ожидайте проверки</div> 
+        <div class="center-image-element"><img src="/staticfiles/images/project/loading.png" alt=""></div>
+    </div>
 
     <form method="POST">
         {% csrf_token %}
-        <input type="submit" name="remove" value="Убрать с проверки">
+        <p class="center-header"><input class="custom-button" type="submit" name="remove" value="Убрать"></p>
     </form>
 
 {% else %}
-    {% if lesson.homework.is_done %}<p>Ваша домашняя работа проверена</p>{% endif %}
-    {% if lesson.homework.comment %}<p>Комментарий преподавателя: "{{ lesson.homework.comment }}"</p>{% endif %}
+    {% if lesson.homework.is_done %}
+
+    <div class="center-container">
+        <div class="center-text-element">Работа проверена</div> 
+        <div class="center-image-element"><img src="/staticfiles/images/project/done.png" alt=""></div>
+    </div>
+
+    {% endif %}
+    
+    {% if lesson.homework.is_returned %}
+
+    <div class="center-container">
+        <div class="center-text-element">Работа возвращена преподавателем</div> 
+        <div class="center-image-element"><img src="/staticfiles/images/project/returned.png" alt=""></div>
+    </div>
+
+    {% endif %}
+    
+    {% if lesson.homework.comment %}
+        <p class="center-header">&lt;&lt;{{ lesson.homework.comment }}&gt;&gt;</p>
+    {% endif %}
 {% endif %}
 
 <form method="POST" enctype="multipart/form-data">
 
     {% csrf_token %}
     {% for homework_file in homework_files %}
-        <hr>
-        <p>
-            №{{ forloop.counter }}
+        
+        <p class="center-header">№{{ forloop.counter }}</p>
+        <p class="center-header">
             <img src="{{ homework_file.path.url }}" class="homework_image" alt="Ссылка на скачивание файла:">
             <a href="{{ homework_file.path.url }}" target="_blank">Скачать</a>
         </p>
@@ -35,7 +60,7 @@
             {% if not homework_file.homework.is_done %}
                 {% if not homework_file.is_second_part %}
                     <p>
-                        <input name="response_{{ homework_file.pk }}" type="text" value="{{ homework_file.student_answer }}">
+                        Введите ответ: <input name="response_{{ homework_file.pk }}" type="text" value="{{ homework_file.student_answer }}">
                     </p>
                 {% else %}
                     <p>Загрузите ответ на задание одним файлом или несколькими:</p>
@@ -62,7 +87,7 @@
                     Вы прикрепили файл(-ы):
                         {% for student_answer in student_answers %}
                             {% if student_answer.homework_file_id == homework_file.pk %}
-                                <p>файл {{ student_answer.file_name }} <a href="{{ student_answer.path.url }}">Скачать</a> | <form method="POST" action="{% url 'lesson-homework' lesson.pk %}"><input type="submit" name="delete_answer_{{ student_answer.pk }}" value="Удалить"></a></p>
+                                <p>файл {{ student_answer.file_name }} <a href="{{ student_answer.path.url }}">Скачать</a></p>
                             {% endif %}
                         {% endfor %}
                     {% else %}
@@ -100,8 +125,10 @@
 {% if not lesson.homework.is_on_check %}
     {% if lesson.homework.is_done %}
     {% else %}
-        <button type="submit">Применить</button>
-        <button type="submit" name="put_on_check">Отправить на проверку</button>
+    <p class="center-header">
+        <button class="custom-button" type="submit">Применить</button>
+        <button class="custom-button" type="submit" name="put_on_check">Отправить</button>
+    </p>
     {% endif %}
 {% endif %}
 </form>

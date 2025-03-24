@@ -4,16 +4,17 @@
 
 {% block content %}
 
-<h1>Форма изменения домашнего задания</h1>
+<a href="{% url 'moder:lesson-detail' lesson.student.pk lesson.pk %}"><img src="/staticfiles/images/project/back_arrow.png" alt="Вернуться"></a>
 
-<p><a href="{% url 'moder:lesson-detail' lesson.student.pk lesson.pk %}">Вернуться</a></p>
+<div class="custom-form-container">
+    <h1 class="center-header">Изменить домашнее задание</h1>
+    <form method="POST">
+        {% csrf_token %}
+        
+        {{ form.as_p }}
 
-<form method="POST">
-    {% csrf_token %}
-    
-    {{ form.as_p }}
-
-    <button type="submit">Изменить домашнее задание</button>
-</form>
+        <button type="submit">Изменить домашнее задание</button>
+    </form>
+</div>
 
 {% endblock %}

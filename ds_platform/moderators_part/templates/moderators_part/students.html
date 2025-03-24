@@ -4,10 +4,12 @@
 
 {% block content %}
 
-<h1>Ученики</h1>
+<h1 class="center-header">Ученики</h1>
 
 {% for student in students %}
-    <p><a href="{% url 'moder:student-detail' student.pk %}">{{ student.surname }} {{ student.name }}, {{ student.school_class }} кл.</a></p>
+    {% if not student.is_staff %}
+        <p><a href="{% url 'moder:student-detail' student.pk %}">{{ student.last_name }} {{ student.first_name }}, {{ student.school_class }} кл.</a></p>
+    {% endif %}
 {% endfor %}
 
 {% endblock %}

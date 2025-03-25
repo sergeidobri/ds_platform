@@ -1,4 +1,5 @@
 import re
+import datetime
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, View
@@ -7,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from .forms import LessonAddForm, HomeworkAddForm, HomeworkFileAddForm, LessonMaterialAddForm
 from django.forms.models import model_to_dict
 from django.contrib.auth import get_user_model
+
 
 # Create your views here.
 class StudentsListView(LoginRequiredMixin,
@@ -48,14 +50,39 @@ class StudentsDetailView(LoginRequiredMixin,
 
 class LessonCreateView(LoginRequiredMixin,
                        PermissionRequiredMixin,
-                       CreateView):
+                       View):
     model = Lesson
     template_name = "moderators_part/lesson_add_form.html"
     form_class = LessonAddForm
     permission_required = ""
 
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {
+            **self.get_context_data(),
+            'form': self.form_class(),
+        })
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            date = form.cleaned_data.get('date', None)
+
+            if date is not None:
+                date_to = date + datetime.timedelta(days=7)
+                current_homework = Homework.objects.create(
+                    date_since=date,
+                    date_until=date_to
+                )
+                self.model.objects.create(**form.cleaned_data,
+                                          homework=current_homework)
+        else:
+            print("Ошибка")
+            return redirect("moder:student-detail", **self.kwargs)
+        
+        return redirect(self.get_success_url())
+
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context = {}
         context["title"] = "Создание урока"
         context["student"] = get_user_model().objects.get(pk=self.kwargs["student_pk"])
         return context
@@ -80,6 +107,9 @@ class LessonDetailView(LoginRequiredMixin,
 
     def post(self, request, *args, **kwargs):
         for key, _ in request.POST.items():
+            if re.match(r'to_delete', key):
+                Lesson.objects.filter(pk=kwargs['lesson_pk']).delete()
+
             if re.match(r'delete_lesson_material_*[0-9]', key):
                 entry_pk = int(key.split("_")[-1])
                 Lesson_material.objects.filter(pk=entry_pk).delete()

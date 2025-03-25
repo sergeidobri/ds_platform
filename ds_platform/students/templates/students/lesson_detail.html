@@ -40,7 +40,11 @@
         {% if lesson.homework.is_returned %}
             <p>Ваша домашняя работа проверена и отправлена на доработку. Успейте переделать её до {{ lesson.homework.date_until|date:"d-m-Y" }} <a href="{% url 'lesson-homework' lesson.pk %}">Перейти</a></p>
         {% else %}
-            <p>К данному уроку доступно домашнее задание. Успейте сделать её до {{ lesson.homework.date_until|date:"d-m-Y" }} <a href="{% url 'lesson-homework' lesson.pk %}">Перейти</a></p>
+            {% if lesson.homework.is_done %}
+                <p>Ваша домашняя работа была проверена. <a href="{% url 'lesson-homework' lesson.pk %}">Перейти</a></p></p>
+            {% else %}
+                <p>К данному уроку доступно домашнее задание. Успейте сделать её до {{ lesson.homework.date_until|date:"d-m-Y" }} <a href="{% url 'lesson-homework' lesson.pk %}">Перейти</a></p>
+            {% endif %}
         {% endif %}
     {% else %}
         {% if lesson.homework.is_done %}

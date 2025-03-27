@@ -15,11 +15,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
-import ds_platform.settings as settings
+from django.urls import path, include, re_path
+from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import RedirectView
 from debug_toolbar.toolbar import debug_toolbar_urls
+from django.views.static import serve
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,8 +28,11 @@ urlpatterns = [
     path('', include('students.urls')),
     path('favicon.ico',RedirectView.as_view(url='staticfiles/images/favicon.ico')),
     path('moderation/', include('moderators_part.urls', namespace='moder')),
+    re_path(r'^staticfiles/images/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += debug_toolbar_urls()
+else:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

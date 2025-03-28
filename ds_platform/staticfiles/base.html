@@ -38,10 +38,10 @@
                         <a href="{% url 'users:profile' %}" class="username">{{ user.username }}</a>
                     {% endif %}
 
-                    <img src="{{ user.avatar.url }}" class="user-photo">
+                    <a href="{% url 'users:profile' %}"><img src="{{ user.avatar.url }}" class="user-photo"></a>
                     <a href="{% url 'users:logout' %}"><img src="/staticfiles/images/project/logout.png" alt="Logout" class="logout-icon"></a>
                 {% else %}
-                    <a href="{% url 'users:login' %}" class="username">Войти</a>
+                    <a href="{% url 'users:login' %}" class="log-in">Войти</a>
                 {% endif %}
             </div>
         </nav>

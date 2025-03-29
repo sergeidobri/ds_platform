@@ -136,6 +136,7 @@ nav {
     height: 2em;
     font-size: 17px;
     border-radius: 0.4em;
+    color: black;
   }
   
 .custom-button p {
@@ -233,6 +234,14 @@ footer {
     max-width: 25%;
 }
 
+.log-in {
+    color: white;
+    margin-right: 15px;
+    line-height: 1.5; 
+    text-decoration: none;
+    font-size: 1.5rem;
+}
+
 /* login form */
 
 .custom-form-container {
@@ -293,5 +302,19 @@ footer {
 @media (max-width: 1200px) {
     .homework_image {
         width: 90%;
+    }
+}
+
+@media (max-width: 500px) {
+    .username {
+        display: none;
+    }
+
+    .custom-form-container {
+        width: 80%;
+    }
+
+    .custom-form-container button {
+        width: auto;
     }
 }

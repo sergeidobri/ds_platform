@@ -236,7 +236,7 @@ class HomeworkDetailView(LoginRequiredMixin,
         lesson = self.get_context_data()['lesson']
         for key, value in request.POST.items():
             if re.match(r'redo', key):
-                Homework.objects.filter(pk=lesson.homework.pk).update(is_on_check=False, is_done=False)
+                Homework.objects.filter(pk=lesson.homework.pk).update(is_on_check=False, is_done=False, is_returned=True)
             
             if lesson.homework.is_done: break
 

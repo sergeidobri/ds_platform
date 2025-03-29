@@ -30,19 +30,21 @@
         <div class="center-image-element"><img src="/staticfiles/images/project/done.png" alt=""></div>
     </div>
 
-    {% endif %}
-    
-    {% if lesson.homework.is_returned %}
+    {% else %}
+        
+        {% if lesson.homework.is_returned %}
 
-    <div class="center-container">
-        <div class="center-text-element">Работа возвращена преподавателем</div> 
-        <div class="center-image-element"><img src="/staticfiles/images/project/returned.png" alt=""></div>
-    </div>
+        <div class="center-container">
+            <div class="center-text-element">Работа возвращена преподавателем</div> 
+            <div class="center-image-element"><img src="/staticfiles/images/project/returned.png" alt=""></div>
+        </div>
 
-    {% endif %}
-    
-    {% if lesson.homework.comment %}
-        <p class="center-header">&lt;&lt;{{ lesson.homework.comment }}&gt;&gt;</p>
+        {% endif %}
+        
+        {% if lesson.homework.comment %}
+            <p class="center-header">&lt;&lt;{{ lesson.homework.comment }}&gt;&gt;</p>
+        {% endif %}
+        
     {% endif %}
 {% endif %}
 

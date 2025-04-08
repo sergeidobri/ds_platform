@@ -10,6 +10,10 @@
 
 <h1 class="center-header">Домашнее задание урока на тему "{{ lesson.theme }}"</h1>
 
+{% if lesson.homework.comment %}
+    <p class="center-header">&lt;&lt;{{ lesson.homework.comment }}&gt;&gt;</p>
+{% endif %}
+
 {% if lesson.homework.is_on_check %}
 
     <div class="center-container">
@@ -39,10 +43,6 @@
             <div class="center-image-element"><img src="/staticfiles/images/project/returned.png" alt=""></div>
         </div>
 
-        {% endif %}
-        
-        {% if lesson.homework.comment %}
-            <p class="center-header">&lt;&lt;{{ lesson.homework.comment }}&gt;&gt;</p>
         {% endif %}
         
     {% endif %}

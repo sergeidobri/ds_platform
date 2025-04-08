@@ -26,9 +26,11 @@ SECRET_KEY = 'django-insecure-ci-@aqe1_&5du-8=pq3#3vszy(f+l#l!wbkjw^kj$=uxgn=3l5
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['89.111.152.249', '127.0.0.1']
+ALLOWED_HOSTS = ['89.111.152.249', '127.0.0.1', 'dsplatform.ru', 'www.dsplatform.ru']
 
 INTERNAL_IPS = [
+    "dsplatform.ru",
+    "www.dsplatform.ru",
     "127.0.0.1",
     '89.111.152.249',
 ]

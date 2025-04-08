@@ -1,15 +1,34 @@
 import re
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
 from django.views.generic import ListView, DetailView, View
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Lesson, Homework_file, Homework, Answer_file, Subject, Lesson_material
 
+subject_list = {
+    "Физика": settings.PROJECT_MEDIA_FOLDER + "physics.png",
+    "Алгебра": settings.PROJECT_MEDIA_FOLDER + "algebra.png",
+    "Геометрия": settings.PROJECT_MEDIA_FOLDER + "geometry.png",
+    "Математика": settings.PROJECT_MEDIA_FOLDER + "maths.png",
+}
+
 # Create your views here.
 def show_home_page(request):
     if not request.user.is_authenticated:
         return redirect("users:login")
     return render(request, "students/index.html", context={"title": "Главная страница", "user": request.user})
+
+
+class SubjectsListView(LoginRequiredMixin,
+                       ListView):
+    template_name = "students/subjects.html"
+    context_object_name = "subjects"
+
+    def get_queryset(self):
+        subjects = {lesson.subject for lesson in Lesson.objects.filter(student_id=self.request.user.pk)}
+        queryset = [{"name": subject.name, "path": subject_list[subject.name]} for subject in subjects]
+        return queryset
 
 class LessonsListView(LoginRequiredMixin,
                       View):

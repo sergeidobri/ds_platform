@@ -6,13 +6,18 @@
 
 {% for subject in subjects %}
     <h2>{{ subject.name }}</h2>
-    <ul>
     {% for lesson in lessons %}
+    <a href="{% url 'lesson-detail' lesson.pk %}" class="pricing-table-link">
+    <dl class="pricing-table">
         {% if lesson.subject_id == subject.pk %}
-            <li><a href="{% url 'lesson-detail' lesson.pk %}">{{ lesson.date|date:"d-m-Y" }} | {{ lesson.theme }}</a></li>
+            <dt>{{ lesson.theme }}</dt>
+            <dd>{{ lesson.date|date:"d-m-Y" }}</dd>
+            <dt>Статус домашнего задания:</dt>
+            <dd>Выполнено</dd>
         {% endif %}
+    </dl>
+    </a>
     {% endfor %}
-    </ul>
 {% endfor %}
 
 {% endblock %}

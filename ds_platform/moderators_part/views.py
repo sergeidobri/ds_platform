@@ -124,9 +124,6 @@ class LessonDetailView(LoginRequiredMixin,
         context = {"title": "Изменение урока"}
         lesson = Lesson.objects.get(pk=self.kwargs["lesson_pk"])
         context["lesson"] = lesson
-        context["form"] = HomeworkAddForm(initial=model_to_dict(context["lesson"]))
-        context["homework_files"] = Homework_file.objects.filter(homework=lesson.homework)
-        context["answer_files"] = Answer_file.objects.filter(homework=lesson.homework)
         context["lesson_materials"] = Lesson_material.objects.filter(lesson=lesson)
         return context
     
@@ -274,8 +271,8 @@ class HomeworkDetailView(LoginRequiredMixin,
         context = {}
         context['title'] = "Проверка/изменение домашнего задания"
         context['lesson'] = Lesson.objects.get(pk=self.kwargs["lesson_pk"])
-        context['homework_files'] = Homework_file.objects.filter(homework=context['lesson'].homework)
-        context['answer_files'] = Answer_file.objects.filter(homework=context['lesson'].homework)
+        context['homework_files'] = Homework_file.objects.filter(homework=context['lesson'].homework).order_by("path").select_related()
+        context['answer_files'] = Answer_file.objects.filter(homework=context['lesson'].homework).order_by("file_name")
         return context
     
 

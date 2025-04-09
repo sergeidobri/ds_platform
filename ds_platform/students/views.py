@@ -82,7 +82,7 @@ class LessonHomeworkView(View):
         return render(request, self.template_name, self.get_context_data())
 
     def post(self, request, **kwargs):
-        template_name = "students/homework_for_lesson.html"
+        template_name = self.template_name
         context = self.get_context_data()
 
         if not self.test_func():

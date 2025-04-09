@@ -55,9 +55,15 @@
         
         <p class="center-header">№{{ forloop.counter }}</p>
         <p class="center-header">
-            <img src="{{ homework_file.path.url }}" class="homework_image" alt="Ссылка на скачивание файла:">
-            <a href="{{ homework_file.path.url }}" target="_blank">Скачать</a>
+            {% with homework_file.path.url as url %}
+                {% if url|slice:"-4:" == ".png" or url|slice:"-4:" == ".jpg" or url|slice:"-4:" == ".gif" or url|slice:"-5:" == ".jpeg" %}
+                    <img src="{{ homework_file.path.url }}" alt="Фото" class="homework_image">
+                {% else %}
+                    <a href="{{ homework_file.path.url }}" target="_blank">Открыть в другой вкладке</a>
+                {% endif %}
+            {% endwith %}
         </p>
+
         {% if not homework_file.homework.is_on_check %}
             {% if not homework_file.homework.is_done %}
                 {% if not homework_file.is_second_part %}
@@ -128,7 +134,7 @@
     {% if lesson.homework.is_done %}
     {% else %}
     <p class="center-header">
-        <button class="custom-button" type="submit">Применить</button>
+        <button class="custom-button" type="submit">Сохранить</button>
         <button class="custom-button" type="submit" name="put_on_check">Отправить</button>
     </p>
     {% endif %}

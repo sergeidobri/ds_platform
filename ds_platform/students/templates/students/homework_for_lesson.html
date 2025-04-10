@@ -64,6 +64,10 @@
             {% endwith %}
         </p>
 
+        {% if homework_file.teacher_comment %}<p>Комментарий преподавателя: "{{ homework_file.teacher_comment }}"{% else %}-</p>{% endif %}
+        {% if homework_file.current_points is not None %}<p>Балл: {% if homework_file.current_points is not None %}{{ homework_file.current_points }}{% else %}0{% endif %}/{{ homework_file.max_points }}</p>{% endif %}
+
+
         {% if not homework_file.homework.is_on_check %}
             {% if not homework_file.homework.is_done %}
                 {% if not homework_file.is_second_part %}
@@ -102,9 +106,6 @@
                         <p>Пока вы не прикрепили файлы. Пожалуйста, постарайтесь решить задание и прикрепить к нему ответ.</p>
                     {% endif %}
                 {% endif %}
-
-                <p>Комментарий преподавателя: {% if homework_file.teacher_comment %}"{{ homework_file.teacher_comment }}"{% else %}-{% endif %}</p>
-                <p>Балл: {% if homework_file.current_points is not None %}{{ homework_file.current_points }}{% else %}0{% endif %}/{{ homework_file.max_points }}</p>
             {% endif %}
         {% else %}
             {% if not homework_file.is_second_part %}

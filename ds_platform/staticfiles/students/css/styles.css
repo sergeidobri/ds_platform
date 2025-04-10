@@ -8,6 +8,10 @@
     -webkit-font-smoothing: antialiased;   
 }
 
+html {
+    font-size: 16px;
+}
+
 h1, h2, h3 {
     font-weight: 100;
 }
@@ -134,7 +138,7 @@ nav {
     margin: 20px 0 20px 0;
     width: 7.2em;
     height: 2em;
-    font-size: 17px;
+    font-size: 1.5rem;
     border-radius: 0.4em;
     color: black;
   }
@@ -301,7 +305,52 @@ footer {
 
 @media (max-width: 1200px) {
     .homework_image {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.4rem;
+    }
+
+    h3 {
+        font-size: 1.1rem;
+    }
+    
+    nav {
+        padding: 0 10px;
+    }
+    
+    .logo {
+        font-size: 1.3rem;
+        margin: 0 10px 0 0;
+    }
+    
+    .panel .element_panel a,
+    .username,
+    .log-in {
+        font-size: 1.3rem;
+    }
+    
+    .custom-button {
+        font-size: 1.1rem;
+        width: 6.5em;
+        height: 1.8em;
+    }
+    
+    .custom-form-container {
         width: 90%;
+        margin: 50px auto;
+        padding: 20px;
     }
 }
 

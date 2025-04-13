@@ -6,15 +6,16 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth import logout
 from django.views.generic import UpdateView
 from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 # from students.models import Student
 
 # Create your views here.
-class RegisterUser(CreateView):
+class RegisterUser(PermissionRequiredMixin, CreateView):
     form_class = StudentUserCreationForm
     success_url = reverse_lazy("users:login")
     template_name = "users/register.html"
     extra_context = {"title": "Регистрация"}
+    permission_required = ""
 
 class LoginUser(LoginView):
     form_class = CustomAuthenticationForm
@@ -22,6 +23,7 @@ class LoginUser(LoginView):
     extra_context = {"title": "Авторизация"}
 
     def get_success_url(self):
+        print(self.get_form_kwargs())
         return reverse_lazy("home")
     
 def logout_user(request):

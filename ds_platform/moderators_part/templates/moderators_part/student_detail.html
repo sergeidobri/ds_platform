@@ -16,7 +16,7 @@
             <li><a href="{% url 'moder:lesson-detail' student.pk lesson.pk %}">{{ lesson.date|date:"d-m-Y" }} | {{ lesson.theme }}</a></li>
         {% endif %}
     {% endfor %}
-    <p><a href="{% url 'moder:add-lesson' student.pk %}"><input class="custom-button" type="button" value="Добавить"></a></p>
+    <p><a href="{% url 'moder:add-lesson' student.pk %}"><input class="btn custom-button" type="button" value="Добавить"></a></p>
 
 {% endfor %}
 </ul>

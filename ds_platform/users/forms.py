@@ -36,9 +36,14 @@ class ProfileForm(forms.ModelForm):
         fields = ["avatar", "first_name", "last_name", "whatsapp_link", "telegram_link", "vk_link", "phone_number", "email"]
 
 class CustomAuthenticationForm(AuthenticationForm):
-    username = UsernameField(widget=forms.TextInput(attrs={"autofocus": True}), label="Псевдоним")
+    username = UsernameField(
+        widget=forms.TextInput(attrs={"autofocus": True}), 
+        label="Псевдоним", 
+    )
     password = forms.CharField(
         label=("Пароль"),
         strip=False,
         widget=forms.PasswordInput(attrs={"autocomplete": "current-password"}),
     )
+
+    error_messages = {'invalid_login': "Неверно введён логин или пароль"}

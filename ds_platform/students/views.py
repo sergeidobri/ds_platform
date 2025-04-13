@@ -134,4 +134,4 @@ class LessonHomeworkView(View):
         return lesson.student == self.request.user or self.request.user.is_staff
 
     def handle_no_permission(self):
-        return redirect("home")
+        return redirect("users:login")

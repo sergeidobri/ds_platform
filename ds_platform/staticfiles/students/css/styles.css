@@ -1,5 +1,7 @@
 /* general */
 
+/* rgb(29, 43, 88) -> rgb(43, 87, 128) */
+
 * {
     margin: 0;
     padding: 0;
@@ -131,54 +133,50 @@ nav {
 
 /* button start */
 
+.btn {
+    border: none;
+    padding: 11px 20px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-dark-white {
+    background-color: rgb(43, 87, 128);
+    color: white;
+    border-radius: 20px;
+    border: 2px solid rgb(43, 87, 128);
+}
+  
+.btn-dark-white:hover {
+    background-color: rgb(43, 87, 128);
+    color: white;
+}
+  
+  /* Дополнительные стили для существующих кнопок */
 .custom-button {
-    background-color: #fff;
-    border: 1px solid rgb(29, 43, 88);
-    padding: 5px;
-    margin: 20px 0 20px 0;
-    width: 7.2em;
-    height: 2em;
-    font-size: 1.5rem;
-    border-radius: 0.4em;
+    background-color: #ffffff;
     color: black;
-  }
-  
-.custom-button p {
-    position: absolute;
-    top: 0.4em;
-    left: 1.2em;
-    margin: 0;
-    padding: 0;
-    transition: .5s;
-    color: rgb(29, 43, 88);
-  }
-  
-.custom-button svg {
-    position: absolute;
-    top: 0.45em;
-    right: 0.5em;
-    margin: 0;
-    padding: 0;
-    opacity: 0;
-    transition: 0.5s;
-    height: 1em;
-    fill: #fff
-  }
-  
-.custom-button:hover p {
-    left: 0.6em;
-    color: #fff
-  }
-  
-.custom-button:hover svg {
-    opacity: 1;
-  }
+    border-radius: 20px;
+    border: 2px solid rgb(29, 43, 88);
+}
   
 .custom-button:hover {
     background-color: rgb(29, 43, 88);
     color: white;
-  }
+}
 
+.delete-button {
+    background-color: rgb(107, 14, 14);
+    color: white;
+    border-radius: 20px;
+    border: 2px solid rgb(107, 14, 14);
+}
+
+.delete-button:hover {
+    background-color: rgb(83, 10, 10);
+    border: 2px solid rgb(83, 10, 10);
+}
 /* button end */
 
 .general-comment {
@@ -339,12 +337,6 @@ footer {
     .username,
     .log-in {
         font-size: 1.3rem;
-    }
-    
-    .custom-button {
-        font-size: 1.1rem;
-        width: 6.5em;
-        height: 1.8em;
     }
     
     .custom-form-container {

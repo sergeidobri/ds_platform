@@ -6,7 +6,9 @@
 
 <a href="{% url 'moder:lesson-detail' lesson.student.pk lesson.pk %}"><img src="/staticfiles/images/project/back_arrow.png" alt="Вернуться"></a>
 
-<h1 class="center-header">Домашняя работа</h1>
+<h1 class="center-header">Домашняя работа.</h1>
+
+<p class="center-header">Ссылка: <a href="https://dsplatform.ru/lessons/{{ lesson.pk }}/homework">https://dsplatform.ru/lessons/{{ lesson.pk }}/homework</a></p>
 
 <form method="POST" enctype="multipart/form-data" action="{% url 'moder:check-homework' lesson.student.pk lesson.pk %}">
 
@@ -23,7 +25,7 @@
         <p class="center-header">"{{ lesson.homework.comment }}"</p>
     {% endif %}
 
-    <p class="center-header"><input class="custom-button" type="submit" name="redo" value="Отменить"></p>
+    <p class="center-header"><input class="btn custom-button" type="submit" name="redo" value="Отменить"></p>
 
 
 {% endif %}
@@ -35,14 +37,12 @@
 
             {% with homework_file.path.url as url %}
                 {% if url|slice:"-4:" == ".png" or url|slice:"-4:" == ".jpg" or url|slice:"-4:" == ".gif" or url|slice:"-5:" == ".jpeg" %}
-                    <img src="{{ homework_file.path.url }}" alt="Фото" class="homework_image">
+                    <img src="{{ homework_file.path.url }}" alt="Фото" class="homework_image">{% if not lesson.homework.is_done %} | <input name="delete_hw_file_{{ homework_file.pk }}" type="submit" value="Удалить файл">{% endif %}
                 {% else %}
                     <a href="{{ homework_file.path.url }}" target="_blank">Открыть в другой вкладке</a>{% if not lesson.homework.is_done %} | <input name="delete_hw_file_{{ homework_file.pk }}" type="submit" value="Удалить файл">{% endif %}
                 {% endif %}
             {% endwith %}
 
-            <!-- <img src="{{ homework_file.path.url }}" class="homework_image" alt="Ссылка на скачивание файла:">
-            <a href="{{ homework_file.path.url }}" target="_blank">Скачать</a>{% if not lesson.homework.is_done %} | <input name="delete_hw_file_{{ homework_file.pk }}" type="submit" value="Удалить файл">{% endif %} -->
         </p>
             {% if not homework_file.is_second_part %}
                  <p>Ответ ученика: {% if homework_file.student_answer %}{{ homework_file.student_answer }}{% else %}-{% endif %}</p>
@@ -80,8 +80,8 @@
     {% endfor %}
 
     {% if not lesson.homework.is_done %}
-    <hr>
-        <p><a href="{% url 'moder:add-homework_file' lesson.student.pk lesson.pk %}"><input class="custom-button" type="button" value="Добавить"></a></p>
+    <hr style="margin-bottom: 10px;">
+        <p><a href="{% url 'moder:add-homework_file' lesson.student.pk lesson.pk %}"><input class="btn custom-button" type="button" value="Добавить"></a></p>
         
         <p class="center-header">Комментарий к дз:</p>
 
@@ -89,16 +89,15 @@
 
         {% if lesson.homework.is_on_check %}
         <p class="center-header">
-            <input class="custom-button" type="submit" name="assert" value="Одобрить">
+            <input class="btn custom-button" type="submit" name="assert" value="Одобрить">
             /
-            <input class="custom-button" type="submit" name="redo" value="Доработка">
+            <input class="btn custom-button" type="submit" name="redo" value="Доработка">
         </p>
         {% endif %}
-
-        <p class="center-header"><button class="custom-button" type="submit">Сохранить</button></p> 
-        <p></p>
-        <p></p>
-        <p class="center-header"><input class="custom-button" type="submit" name="to_delete" value="Удалить"></p>
+        <br>
+        <p class="center-header"><button class="btn custom-button" type="submit">Сохранить</button></p> 
+        <br>
+        <p class="center-header"><input class="btn custom-button delete-button" type="submit" name="to_delete" value="Удалить"></p>
     {% endif %}
 </form>
 

@@ -23,7 +23,7 @@
                     {% if user.is_staff %}
                         <span class="element_panel"><a href="{% url 'moder:student-list' %}">Управление</a></span>
                     {% else %}
-                        <span class="element_panel"><a href="{% url 'lessons' %}">Мои уроки</a></span>
+                        <span class="element_panel"><a href="{% url 'subjects' %}">Мои предметы</a></span>
                     {% endif %}
                 {% endif %}
             </div>

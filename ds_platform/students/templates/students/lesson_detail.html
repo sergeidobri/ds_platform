@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<a href="{% url 'lessons' %}"><img src="/staticfiles/images/project/back_arrow.png" alt="Вернуться к урокам"></a>
+<a href="{% url 'lessons' %}?subject={{ lesson.subject.pk }}"><img src="/staticfiles/images/project/back_arrow.png" alt="Вернуться к урокам"></a>
 
 <h3 class="center-header-grey">-{{ lesson.subject.name }}-</h3>
 
@@ -12,9 +12,9 @@
 
 <h2>Информация про урок:</h2>
 
-<p>Дата проведения урока: {{ lesson.date|date:"d-m-Y" }}</p>
+<p>Дата проведения урока: {{ lesson.date|date:"j F Y" }}</p>
 
-<p>Ссылка на урок: {% if user.lesson_link != '-' %}<a href="{{ user.lesson_link }}" target="_blank"><span class="video-conf-link">{{ user.lesson_link }}</span></a>{% endif %}</p>
+{% if user.lesson_link != '-' %}<p>Ссылка на урок: <a href="{{ user.lesson_link }}" target="_blank"><span class="video-conf-link">{{ user.lesson_link }}</span></a></p>{% endif %}
 
 {% if lesson_materials %}
 

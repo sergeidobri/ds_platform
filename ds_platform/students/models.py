@@ -30,6 +30,14 @@ class Homework(models.Model):
         default=False,
         verbose_name="отправлено на доработку"
     )
+    max_points = models.IntegerField(
+        null=True,
+        verbose_name="максимальное количество баллов за дз",
+    )
+    curr_points = models.IntegerField(
+        null=True,
+        verbose_name="текущее количество баллов за дз",
+    )
 
 
     def __str__(self):

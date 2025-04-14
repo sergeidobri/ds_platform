@@ -23,7 +23,7 @@ from debug_toolbar.toolbar import debug_toolbar_urls
 from django.views.static import serve
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('40e13c7fdfb43c65ed08b8b1e436423c/', admin.site.urls),
     path('users/', include('users.urls', namespace='users')),
     path('', include('students.urls')),
     path('favicon.ico',RedirectView.as_view(url='staticfiles/images/favicon.ico')),

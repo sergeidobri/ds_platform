@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.views.generic import ListView, DetailView, View
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Lesson, Homework_file, Homework, Answer_file, Subject, Lesson_material
+from django.core.paginator import Paginator
 
 subject_list = {
     "Физика": settings.PROJECT_MEDIA_FOLDER + "physics.png",
@@ -26,28 +27,30 @@ class SubjectsListView(LoginRequiredMixin,
     context_object_name = "subjects"
 
     def get_queryset(self):
-        subjects = {lesson.subject for lesson in Lesson.objects.filter(student_id=self.request.user.pk)}
-        queryset = [{"name": subject.name, "path": subject_list[subject.name]} for subject in subjects]
+        subjects = {lesson.subject for lesson in Lesson.objects.filter(student_id=self.request.user.pk).prefetch_related("subject")}
+        queryset = [{"name": subject.name, "path": subject_list[subject.name], 'pk': subject.pk} for subject in subjects]
         return queryset
 
 class LessonsListView(LoginRequiredMixin,
                       View):
     template_name = 'students/lessons.html'
+    paginate_by = 10
     
     def get(self, request):
-        return render(request, self.template_name, self.get_context_data())
+        page_num = request.GET.get('page', 1)
+        return render(request, self.template_name, self.get_context_data(page=page_num))
 
     def get_context_data(self, **kwargs):
         context = {}
         current_user_id = self.request.user.pk
-        lessons = Lesson.objects.filter(student_id=current_user_id).order_by("-date")
-        subjects = {lesson.subject_id for lesson in lessons}
+        subject_id = self.request.GET.get('subject', 1)
+        lessons = Lesson.objects.filter(student_id=current_user_id, subject_id=subject_id).order_by("-date").prefetch_related("homework")
+        paginator = Paginator(lessons, self.paginate_by)
 
-        context['lessons'] = lessons
+        context['subject'] = Subject.objects.get(pk=subject_id)
+        context['page_obj'] = paginator.page(kwargs.get('page', 1))
         context["title"] = "Уроки"
         context["user"] = self.request.user
-        context["subjects"] = Subject.objects.filter(pk__in=subjects)
-        context["student"] = self.request.user
         return context
 
 

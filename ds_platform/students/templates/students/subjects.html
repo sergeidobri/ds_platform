@@ -6,7 +6,7 @@
 
 <div class="parent-subject">
     {% for subject in subjects %}
-        <a href="{% url  %}">
+        <a href="{% url 'lessons' %}?subject={{ subject.pk }}" class="subject-link">
         <span class="subject">
             <div class="subject-image"><img src="{{ subject.path }}"></div>
             <div class="subject-name">{{ subject.name }}</div>

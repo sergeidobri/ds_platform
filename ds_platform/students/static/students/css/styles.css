@@ -1,7 +1,5 @@
 /* general */
 
-/* rgb(29, 43, 88) -> rgb(43, 87, 128) */
-
 * {
     margin: 0;
     padding: 0;
@@ -23,6 +21,12 @@ body {
     flex-direction: column;
     
 }
+
+a:visited, a:hover, a:active, a:focus {
+    color: yourColor !important;
+    text-decoration: none !important;
+    outline: none !important;
+ }
 
 /* navbar */
 
@@ -56,7 +60,7 @@ nav {
 
 .panel {
     display: flex;
-    justify-content: flex-start; /* начинаем с самого левого края */
+    justify-content: flex-start; 
     align-items: center;
     flex: 1;
     align-self: stretch;
@@ -141,19 +145,6 @@ nav {
     transition: background-color 0.3s;
 }
 
-.btn-dark-white {
-    background-color: rgb(43, 87, 128);
-    color: white;
-    border-radius: 20px;
-    border: 2px solid rgb(43, 87, 128);
-}
-  
-.btn-dark-white:hover {
-    background-color: rgb(43, 87, 128);
-    color: white;
-}
-  
-  /* Дополнительные стили для существующих кнопок */
 .custom-button {
     background-color: #ffffff;
     color: black;
@@ -178,6 +169,148 @@ nav {
     border: 2px solid rgb(83, 10, 10);
 }
 /* button end */
+
+/* subject list */
+
+.parent-subject {
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: center; 
+}
+
+.subject {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    margin: 10px; 
+    text-decoration: none; 
+    color: inherit; 
+}
+
+.subject-image img {
+    width: 300px; 
+    height: 300px; 
+    object-fit: cover; 
+    border-radius: 5px; 
+}
+
+.subject-name {
+    color: black;
+    margin-top: 5px; 
+    font-size: 1.25rem; 
+    text-align: center; 
+}
+
+/* subject list end */
+
+/* lessons list */
+
+.lessons-list {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  /* rgb(43, 87, 128) -> rgb(43, 87, 128) */
+  .lesson-item {
+    background-color: white;
+    color: rgb(0, 0, 0);
+    border-radius: 8px;
+    border: 2px solid rgb(43, 87, 128);
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .lesson-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgb(43, 87, 128);
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+  }
+  
+  .lesson-title {
+    margin: 0;
+    font-size: 1.5em;
+  }
+  
+  .lesson-date {
+    font-size: 1em;
+    color: #3a3b46;
+  }
+  
+  .lesson-status {
+    font-size: 1.1em;
+  }
+
+/* lessons list end */
+
+/* pagination + pagination buttons */
+
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 16px 0;
+  }
+  
+  .pagination .btn {
+    background-color: #ffffff;
+    color: rgb(43, 87, 128);
+    border: 2px solid rgb(43, 87, 128);
+    border-radius: 4px;
+  }
+
+  .pagination .btn-pagination {
+    background-color: #ffffff;
+    color: rgb(29, 43, 88);
+    border: 2px rgb(43, 87, 128);
+    border-radius: 20px;
+  }
+
+  .pagination .btn-pagination:hover {
+    background-color: #b0bcd6;
+  }
+  
+  .pagination .btn.active {
+    background-color: rgb(29, 43, 88);
+    border: 2px rgb(29, 43, 88);
+    color: #ffffff;
+    pointer-events: none;
+    border-radius: 20px;
+  }
+  
+  .pagination .ellipsis {
+    font-size: 1em;
+    color: rgb(43, 87, 128);
+  }
+  
+  .btn-dark-white {
+    background-color: rgb(29, 43, 88);
+    color: white;
+    border-radius: 20px;
+    border: 2px solid rgb(43, 87, 128);
+  }
+  
+  .btn-dark-white:hover {
+    background-color: rgb(29, 43, 88);
+    border: 2px solid rgb(29, 43, 88);
+    color: white;
+  }
+  
+  .btn-white-dark {
+    background-color: #ffffff;
+    color: rgb(43, 87, 128);
+    border-radius: 20px;
+    border: 2px solid rgb(43, 87, 128);
+  }
+  
+  .btn-white-dark:hover {
+    background-color: #f0f0f0;
+  }
+
+/* pagination end */
 
 .general-comment {
     width: 75%;
@@ -333,6 +466,13 @@ footer {
         margin: 0 10px 0 0;
     }
     
+    .subject-image img {
+        width: 150px; 
+        height: 150px; 
+        object-fit: cover; 
+        border-radius: 5px; 
+    }
+
     .panel .element_panel a,
     .username,
     .log-in {
@@ -343,6 +483,15 @@ footer {
         width: 90%;
         margin: 50px auto;
         padding: 20px;
+    }
+
+    .parent-subject {
+        flex-direction: column;
+        align-items: center; 
+    }
+
+    .subject {
+        margin: 5px 0; 
     }
 }
 
@@ -358,4 +507,24 @@ footer {
     .custom-form-container button {
         width: auto;
     }
+    
+    .lesson-date {
+        display: none;
+    }
+
+    .btn-pagination, .ellipsis {
+        display: none;
+    }
+
+    .btn-dark-white {
+        background-color: #ffffff;
+        color: rgb(29, 43, 88);
+        border: 2px rgb(43, 87, 128);
+        border-radius: 20px;
+    }
+
+    .btn-dark-white:hover {
+        background-color: #b0bcd6;
+    }
 }
+

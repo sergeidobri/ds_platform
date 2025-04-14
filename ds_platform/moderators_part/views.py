@@ -10,6 +10,17 @@ from django.forms.models import model_to_dict
 from django.contrib.auth import get_user_model
 
 
+def recount_points(lesson):
+    if lesson.homework is None: return
+    homework_files = Homework_file.objects.filter(homework_id=lesson.homework.pk)
+    curr_points_count = 0
+    max_points_count = 0
+    for homework_file in homework_files:
+        curr_points_count += homework_file.current_points if homework_file.current_points else 0
+        max_points_count += homework_file.max_points if homework_file.max_points else 0
+    Homework.objects.filter(pk=lesson.homework.pk).update(curr_points=curr_points_count, max_points=max_points_count)
+
+
 # Create your views here.
 class StudentsListView(LoginRequiredMixin,
                        PermissionRequiredMixin,
@@ -208,9 +219,13 @@ class HomeworkUpdateView(LoginRequiredMixin,
     
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
+
         if form.is_valid():
             lesson = self.get_context_data()['lesson']
+            print(form.cleaned_data)
             Homework.objects.filter(pk=lesson.homework.pk).update(**form.cleaned_data)
+            if "count_points" in request.POST:
+                recount_points(lesson)
             return redirect("moder:lesson-detail", **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -234,12 +249,14 @@ class HomeworkDetailView(LoginRequiredMixin,
         for key, value in request.POST.items():
             if re.match(r'redo', key):
                 Homework.objects.filter(pk=lesson.homework.pk).update(is_on_check=False, is_done=False, is_returned=True)
+                recount_points(lesson)
             
             if lesson.homework.is_done: break
 
             if re.match(r'delete_hw_file_*', key):
                 entry_pk = int(key.split('_')[-1])
                 Homework_file.objects.filter(pk=entry_pk).delete()
+                recount_points(lesson)
 
             if re.match(r'comment_*', key):
                 entry_pk = int(key.split('_')[-1])
@@ -251,6 +268,7 @@ class HomeworkDetailView(LoginRequiredMixin,
             
             if re.match(r'assert', key):
                 Homework.objects.filter(pk=lesson.homework.pk).update(is_on_check=False, is_done=True)
+                recount_points(lesson)
 
             if re.match(r'points_*', key):
                 entry_pk = int(key.split('_')[-1])
@@ -289,11 +307,12 @@ class HomeworkFilesCreateView(LoginRequiredMixin,
     def post(self, request, *args, **kwargs):
         lesson = self.get_context_data()['lesson']
         form = self.form_class(request.POST, request.FILES)
+
         if form.is_valid():
             form.cleaned_data['homework'] = lesson.homework
             Homework_file.objects.create(**form.cleaned_data)
-        else:
-            print("not valid")
+            recount_points(lesson)
+
         return redirect("moder:check-homework", **kwargs)
         
 

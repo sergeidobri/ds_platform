@@ -33,6 +33,8 @@ class LessonAddForm(forms.ModelForm):
 
 class HomeworkAddForm(forms.ModelForm):
     date_until = forms.DateField(label="Дата дедлайна", widget=forms.SelectDateWidget(years=YEARS, months=MONTHS))
+    curr_points = forms.IntegerField(label="Текущее число баллов", required=False)
+    max_points = forms.IntegerField(label="Максимальное число баллов", required=False)
 
     class Meta:
         model = Homework

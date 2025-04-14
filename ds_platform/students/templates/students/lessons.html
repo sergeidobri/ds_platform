@@ -4,15 +4,113 @@
 
 {% block content %}
 
-{% for subject in subjects %}
-    <h2>{{ subject.name }}</h2>
-    <ul>
-    {% for lesson in lessons %}
-        {% if lesson.subject_id == subject.pk %}
-            <li><a href="{% url 'lesson-detail' lesson.pk %}">{{ lesson.date|date:"d-m-Y" }} | {{ lesson.theme }}</a></li>
+<a href="{% url 'subjects' %}"><img src="/staticfiles/images/project/back_arrow.png" alt="Вернуться к предметам"></a>
+
+<h1 class="center-header">{{ subject.name }}</h1>
+
+<div class="pagination">
+    {% if page_obj.has_previous %}
+    <a href="?subject={{ subject.pk }}&page={{ page_obj.previous_page_number }}"><button class="btn btn-dark-white" aria-label="Назад">&#8592;</button></a>
+    {% endif %}
+    
+    {% if page_obj.number != 1 %}
+    <a href="?subject={{ subject.pk }}&page=1"><button class="btn btn-pagination">1</button></a>
+    {% endif %}
+
+    {% if page_obj.number > 3 %}
+    <span class="ellipsis">...</span>
+    {% endif %}
+
+    {% if page_obj.number > 2 %}
+    <a href="?subject={{ subject.pk }}&page={{ page_obj.previous_page_number }}"><button class="btn btn-pagination" aria-label="Назад">{{ page_obj.previous_page_number }}</button></a>
+    {% endif %}
+    
+    <button class="btn active">{{ page_obj.number }}</button>
+
+    {% if page_obj.number < page_obj.paginator.num_pages|add:"-1" %}
+    <a href="?subject={{ subject.pk }}&page={{ page_obj.next_page_number }}"><button class="btn btn-pagination" aria-label="Дальше">{{ page_obj.next_page_number }}</button></a>
+    {% endif %}
+    {% if page_obj.number < page_obj.paginator.num_pages|add:"-2" %}
+    <span class="ellipsis">...</span>
+    {% endif %}
+
+    {% if page_obj.number != page_obj.paginator.num_pages %}
+    <a href="?subject={{ subject.pk }}&page={{ page_obj.paginator.num_pages }}"><button class="btn btn-pagination">{{ page_obj.paginator.num_pages }}</button></a>
+    {% endif %}
+
+    {% if page_obj.has_next %}
+    <a href="?subject={{ subject.pk }}&page={{ page_obj.next_page_number }}"><button class="btn btn-dark-white" aria-label="Вперёд">&#8594;</button></a>
+    {% endif %}
+</div>
+
+<div class="lessons-list">
+    {% for lesson in page_obj %}
+    <a href="{% url 'lesson-detail' lesson.pk %}">
+    <div class="lesson-item">
+      <div class="lesson-header">
+        <h2 class="lesson-title">{{ lesson.theme }}</h2>
+        <span class="lesson-date">{{ lesson.date|date:"d-m-Y" }}</span>
+      </div>
+      <div class="lesson-status">Домашнее задание: 
+        <!-- Баллы за дз -->
+        {% if lesson.homework.is_done or lesson.homework.is_returned %}
+        {% if lesson.homework.curr_points is not None %}
+            {{ lesson.homework.curr_points }}/{{ lesson.homework.max_points }}
         {% endif %}
+        {% endif %} 
+        <!-- Статус дз: -->
+        {% if lesson.homework %}
+            {% if lesson.homework.is_done %}
+                ✅
+            {% else %}
+                {% if lesson.homework.is_returned %}
+                    ❌
+                {% else %}
+                    Ожидается ⌛
+                {% endif %}
+            {% endif %}
+        {% else %}
+            Отсутствует
+        {% endif %}
+      </div>
+    </div>
+    </a>
     {% endfor %}
-    </ul>
-{% endfor %}
+</div>
+
+<div class="pagination">
+    {% if page_obj.has_previous %}
+    <a href="?subject={{ subject.pk }}&page={{ page_obj.previous_page_number }}"><button class="btn btn-dark-white" aria-label="Назад">&#8592;</button></a>
+    {% endif %}
+    
+    {% if page_obj.number != 1 %}
+    <a href="?subject={{ subject.pk }}&page=1"><button class="btn btn-pagination">1</button></a>
+    {% endif %}
+
+    {% if page_obj.number > 3 %}
+    <span class="ellipsis">...</span>
+    {% endif %}
+
+    {% if page_obj.number > 2 %}
+    <a href="?subject={{ subject.pk }}&page={{ page_obj.previous_page_number }}"><button class="btn btn-pagination" aria-label="Назад">{{ page_obj.previous_page_number }}</button></a>
+    {% endif %}
+    
+    <button class="btn active">{{ page_obj.number }}</button>
+
+    {% if page_obj.number < page_obj.paginator.num_pages|add:"-1" %}
+    <a href="?subject={{ subject.pk }}&page={{ page_obj.next_page_number }}"><button class="btn btn-pagination" aria-label="Дальше">{{ page_obj.next_page_number }}</button></a>
+    {% endif %}
+    {% if page_obj.number < page_obj.paginator.num_pages|add:"-2" %}
+    <span class="ellipsis">...</span>
+    {% endif %}
+
+    {% if page_obj.number != page_obj.paginator.num_pages %}
+    <a href="?subject={{ subject.pk }}&page={{ page_obj.paginator.num_pages }}"><button class="btn btn-pagination">{{ page_obj.paginator.num_pages }}</button></a>
+    {% endif %}
+
+    {% if page_obj.has_next %}
+    <a href="?subject={{ subject.pk }}&page={{ page_obj.next_page_number }}"><button class="btn btn-dark-white" aria-label="Вперёд">&#8594;</button></a>
+    {% endif %}
+</div>
 
 {% endblock %}
